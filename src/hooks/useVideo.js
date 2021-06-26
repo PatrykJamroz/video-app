@@ -24,10 +24,17 @@ export function useVideo() {
     }
   };
 
-  const handleYouTubeVideo = (url) => {
-    let params = new URL(url).searchParams;
-    let videoID = params.get("v");
-    return videoID;
+  const handleYouTubeVideo = (inputURL) => {
+    const url = new URL(inputURL);
+
+    if (inputURL.includes("youtube.com")) {
+      const params = url.searchParams;
+      const videoID = params.get("v");
+      return videoID;
+    } else {
+      const videoID = url.pathname.split("/");
+      return videoID[1];
+    }
   };
 
   return { inputURL, handleInputURLChange, handleVideoAdd };
