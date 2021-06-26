@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { API_KEY } from "../crede";
+import { youtubeApi } from "../APIs/youtubeAPI";
 
 export function useVideo() {
   //paste url -> setState
@@ -20,8 +21,17 @@ export function useVideo() {
   const handleVideoAdd = (e) => {
     e.preventDefault();
     if (inputURL.includes("youtu")) {
-      console.log(handleYouTubeVideo(inputURL));
+      handleYouTubeVideo(inputURL);
+      console.log(videoData);
     }
+  };
+
+  const fetchYouTubeData = async (videoID) => {
+    const data = await youtubeApi(videoID);
+    setVideoData([
+      ...videoData,
+      { id: videoID, name: data.items[0].snippet.title },
+    ]);
   };
 
   const handleYouTubeVideo = (inputURL) => {
@@ -30,10 +40,10 @@ export function useVideo() {
     if (inputURL.includes("youtube.com")) {
       const params = url.searchParams;
       const videoID = params.get("v");
-      return videoID;
+      fetchYouTubeData(videoID);
     } else {
       const videoID = url.pathname.split("/");
-      return videoID[1];
+      fetchYouTubeData(videoID[1]);
     }
   };
 

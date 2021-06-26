@@ -8,7 +8,13 @@ function App() {
   return (
     <div className="App">
       <Header />
-      {data.inputURL}
+      {data.videoData === undefined ? (
+        <h1>Empty data</h1>
+      ) : (
+        data.videoData.map((item) => {
+          <h1 key={item.id}>{item.name}</h1>;
+        })
+      )}
     </div>
   );
 }
