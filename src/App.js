@@ -1,5 +1,6 @@
-import "./App.css";
 import Header from "./components/Header";
+import Card from "react-bootstrap/Card";
+import Button from "react-bootstrap/Button";
 import { useVideo } from "./hooks/useVideo";
 
 function App() {
@@ -8,13 +9,16 @@ function App() {
   return (
     <div className="App">
       <Header />
-      {data.videoData === undefined ? (
-        <h1>Empty data</h1>
-      ) : (
-        data.videoData.map((item) => {
-          <h1 key={item.id}>{item.name}</h1>;
-        })
-      )}
+      {data.videoData.map((item) => (
+        <Card style={{ width: "18rem" }} key={item.id}>
+          <Card.Img variant="top" src={item.thumbnail} />
+          <Card.Body>
+            <Card.Title>{item.name}</Card.Title>
+            <Card.Text>{item.id}</Card.Text>
+            <Button variant="primary">Go somewhere</Button>
+          </Card.Body>
+        </Card>
+      ))}
     </div>
   );
 }

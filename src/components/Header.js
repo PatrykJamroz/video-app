@@ -7,7 +7,7 @@ import { useVideo } from "../hooks/useVideo";
 export default function Header() {
   const data = useVideo();
   return (
-    <Navbar bg="dark" expand="lg">
+    <Navbar bg="light" expand="lg">
       <Navbar.Brand href="#home">Video App</Navbar.Brand>
       <Form onSubmit={data.handleVideoAdd} inline>
         <FormControl
