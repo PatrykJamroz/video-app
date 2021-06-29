@@ -28,14 +28,14 @@ export function useVideo() {
     e.preventDefault();
     if (inputURL.includes("youtu")) {
       handleYouTubeVideo(inputURL);
-      console.log(videoData);
+      //console.log(videoData);
     }
   };
 
   const fetchYouTubeData = async (videoID) => {
     const data = await youtubeApi(videoID);
-    setVideoData([
-      ...videoData,
+    setVideoData((state) => [
+      ...state,
       {
         id: videoID,
         name: data.items[0].snippet.title,
@@ -56,6 +56,8 @@ export function useVideo() {
       fetchYouTubeData(videoID[1]);
     }
   };
+
+  console.log(videoData);
 
   return { inputURL, videoData, handleInputURLChange, handleVideoAdd };
 }

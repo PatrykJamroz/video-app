@@ -10,7 +10,10 @@ function App() {
     <div className="App">
       <Header />
       {data.videoData.map((item) => (
-        <Card style={{ width: "18rem" }} key={item.id}>
+        <Card
+          style={{ width: "18rem" }}
+          key={`${item.id}${data.videoData.length}`}
+        >
           <Card.Img variant="top" src={item.thumbnail} />
           <Card.Body>
             <Card.Title>{item.name}</Card.Title>

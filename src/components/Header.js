@@ -6,6 +6,7 @@ import { useVideo } from "../hooks/useVideo";
 
 export default function Header() {
   const data = useVideo();
+  console.log(`header: ${data.videoData}`);
   return (
     <Navbar bg="light" expand="lg">
       <Navbar.Brand href="#home">Video App</Navbar.Brand>
