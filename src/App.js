@@ -1,7 +1,6 @@
 import Header from "./components/Header";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import { useVideo } from "./hooks/useVideo";
 import { Context } from "./Context";
 import { useContext } from "react";
 
