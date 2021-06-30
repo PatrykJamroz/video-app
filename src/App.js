@@ -2,18 +2,17 @@ import Header from "./components/Header";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import { useVideo } from "./hooks/useVideo";
+import { Context } from "./Context";
+import { useContext } from "react";
 
 function App() {
-  const data = useVideo();
+  const { videoData } = useContext(Context);
 
   return (
     <div className="App">
       <Header />
-      {data.videoData.map((item) => (
-        <Card
-          style={{ width: "18rem" }}
-          key={`${item.id}${data.videoData.length}`}
-        >
+      {videoData.map((item) => (
+        <Card style={{ width: "18rem" }} key={`${item.id}${videoData.length}`}>
           <Card.Img variant="top" src={item.thumbnail} />
           <Card.Body>
             <Card.Title>{item.name}</Card.Title>

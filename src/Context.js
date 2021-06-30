@@ -1,15 +1,10 @@
 import { useState } from "react";
-import { API_KEY } from "../crede";
-import { youtubeApi } from "../APIs/youtubeAPI";
+import { youtubeApi } from "./APIs/youtubeAPI";
+import React from "react";
 
-export function useVideo() {
-  //paste url -> setState
-  //add button -> onSubmit
-  //check source (youtube, vimeo, etc.)
-  //get ID
-  //fetch data
-  //set state -> view count, likes count, vids name, vids thumbnail, date of add (to our app)
+const Context = React.createContext();
 
+function ContextProvider({ children }) {
   const [inputURL, setInputURL] = useState("empty");
   const [videoData, setVideoData] = useState([
     {
@@ -57,7 +52,12 @@ export function useVideo() {
     }
   };
 
-  console.log(videoData);
-
-  return { inputURL, videoData, handleInputURLChange, handleVideoAdd };
+  return (
+    <Context.Provider
+      value={{ inputURL, videoData, handleInputURLChange, handleVideoAdd }}
+    >
+      {children}
+    </Context.Provider>
+  );
 }
+export { ContextProvider, Context };
