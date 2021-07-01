@@ -11,6 +11,8 @@ function ContextProvider({ children }) {
       id: "7lCDEYXw3mM",
       name: "Google I/O 101: Q&A On Using Google APIs",
       thumbnail: "https://i.ytimg.com/vi/7lCDEYXw3mM/default.jpg",
+      savedDate:
+        "Tue Feb 04 1992 21:49:21 GMT+0200 (Central European Summer Time)",
     },
   ]);
 
@@ -35,6 +37,7 @@ function ContextProvider({ children }) {
         id: videoID,
         name: data.items[0].snippet.title,
         thumbnail: data.items[0].snippet.thumbnails.default.url,
+        savedDate: new Date(),
       },
     ]);
   };

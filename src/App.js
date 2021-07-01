@@ -15,7 +15,8 @@ function App() {
           <Card.Img variant="top" src={item.thumbnail} />
           <Card.Body>
             <Card.Title>{item.name}</Card.Title>
-            <Card.Text>{item.id}</Card.Text>
+            <Card.Text>{`video ID: ${item.id}`}</Card.Text>
+            <Card.Text>{`saved date: ${item.savedDate}`}</Card.Text>
             <Button variant="primary" onClick={(e) => deleteVideo(item.id, e)}>
               Delete
             </Button>
