@@ -52,9 +52,20 @@ function ContextProvider({ children }) {
     }
   };
 
+  const deleteVideo = (id) => {
+    let newArray = [...videoData].filter((video) => video.id !== id);
+    setVideoData(newArray);
+  };
+
   return (
     <Context.Provider
-      value={{ inputURL, videoData, handleInputURLChange, handleVideoAdd }}
+      value={{
+        inputURL,
+        videoData,
+        handleInputURLChange,
+        handleVideoAdd,
+        deleteVideo,
+      }}
     >
       {children}
     </Context.Provider>

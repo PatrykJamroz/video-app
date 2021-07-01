@@ -5,7 +5,7 @@ import { Context } from "./Context";
 import { useContext } from "react";
 
 function App() {
-  const { videoData } = useContext(Context);
+  const { videoData, deleteVideo } = useContext(Context);
 
   return (
     <div className="App">
@@ -16,7 +16,9 @@ function App() {
           <Card.Body>
             <Card.Title>{item.name}</Card.Title>
             <Card.Text>{item.id}</Card.Text>
-            <Button variant="primary">Go somewhere</Button>
+            <Button variant="primary" onClick={(e) => deleteVideo(item.id, e)}>
+              Delete
+            </Button>
           </Card.Body>
         </Card>
       ))}
