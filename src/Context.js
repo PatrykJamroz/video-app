@@ -84,6 +84,16 @@ function ContextProvider({ children }) {
     setVideoData(newArray);
   };
 
+  const toggleFavourite = (key) => {
+    const newArray = [...videoData];
+    newArray.map((item) => {
+      if (item.key === key) {
+        item.favourite = !item.favourite;
+      }
+    });
+    setVideoData(newArray);
+  };
+
   return (
     <Context.Provider
       value={{
@@ -92,6 +102,7 @@ function ContextProvider({ children }) {
         handleInputURLChange,
         handleVideoAdd,
         deleteVideo,
+        toggleFavourite,
       }}
     >
       {children}
