@@ -11,7 +11,7 @@ function App() {
     <div className="App">
       <Header />
       {videoData.map((item) => (
-        <Card style={{ width: "18rem" }} key={`${item.id}${videoData.length}`}>
+        <Card style={{ width: "18rem" }} key={`${item.id}${Math.random()}`}>
           <Card.Img variant="top" src={item.thumbnail} />
           <Card.Body>
             <Card.Title>{item.name}</Card.Title>
