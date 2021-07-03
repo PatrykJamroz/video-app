@@ -1,20 +1,13 @@
 import { useState } from "react";
 import { youtubeApi } from "./APIs/youtubeAPI";
+import { vimeoApi } from "./APIs/vimeoAPI";
 import React from "react";
 
 const Context = React.createContext();
 
 function ContextProvider({ children }) {
   const [inputURL, setInputURL] = useState("empty");
-  const [videoData, setVideoData] = useState([
-    {
-      id: "7lCDEYXw3mM",
-      name: "Google I/O 101: Q&A On Using Google APIs",
-      thumbnail: "https://i.ytimg.com/vi/7lCDEYXw3mM/default.jpg",
-      savedDate:
-        "Tue Feb 04 1992 21:49:21 GMT+0200 (Central European Summer Time)",
-    },
-  ]);
+  const [videoData, setVideoData] = useState([]);
 
   const handleInputURLChange = (e) => {
     setInputURL(e.currentTarget.value);
@@ -25,7 +18,10 @@ function ContextProvider({ children }) {
     e.preventDefault();
     if (inputURL.includes("youtu")) {
       handleYouTubeVideo(inputURL);
-      //console.log(videoData);
+    } else if (inputURL.includes("vimeo")) {
+      const url = new URL(inputURL);
+      const videoID = url.pathname.split("/");
+      fetchVimeoData(videoID[1]);
     }
   };
 
@@ -35,9 +31,11 @@ function ContextProvider({ children }) {
       ...state,
       {
         id: videoID,
+        key: `${videoID}${Math.random()}`,
         name: data.items[0].snippet.title,
         thumbnail: data.items[0].snippet.thumbnails.default.url,
         savedDate: new Date(),
+        source: "YouTube",
       },
     ]);
   };
@@ -55,8 +53,23 @@ function ContextProvider({ children }) {
     }
   };
 
-  const deleteVideo = (id) => {
-    let newArray = [...videoData].filter((video) => video.id !== id);
+  const fetchVimeoData = async (videoID) => {
+    const data = await vimeoApi(videoID);
+    setVideoData((state) => [
+      ...state,
+      {
+        id: videoID,
+        key: `${videoID}${Math.random()}`,
+        name: data.name,
+        thumbnail: data.pictures.sizes[0].link,
+        savedDate: new Date(),
+        source: "Vimeo",
+      },
+    ]);
+  };
+
+  const deleteVideo = (key) => {
+    let newArray = [...videoData].filter((video) => video.key !== key);
     setVideoData(newArray);
   };
 
@@ -75,3 +88,14 @@ function ContextProvider({ children }) {
   );
 }
 export { ContextProvider, Context };
+
+//hardcoded state
+// {
+//   id: "7lCDEYXw3mM",
+//   key: "7lCDEYXw3mM9",
+//   name: "Google I/O 101: Q&A On Using Google APIs",
+//   thumbnail: "https://i.ytimg.com/vi/7lCDEYXw3mM/default.jpg",
+//   savedDate:
+//     "Tue Feb 04 1992 21:49:21 GMT+0200 (Central European Summer Time)",
+//   source: "YouTube/Hardcoded",
+// },
