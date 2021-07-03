@@ -10,10 +10,12 @@ function ContextProvider({ children }) {
   const [videoData, setVideoData] = useState([
     {
       id: "7lCDEYXw3mM",
+      key: "7lCDEYXw3mM9",
       name: "Google I/O 101: Q&A On Using Google APIs",
       thumbnail: "https://i.ytimg.com/vi/7lCDEYXw3mM/default.jpg",
       savedDate:
         "Tue Feb 04 1992 21:49:21 GMT+0200 (Central European Summer Time)",
+      source: "YouTube/Hardcoded",
     },
   ]);
 
@@ -39,9 +41,11 @@ function ContextProvider({ children }) {
       ...state,
       {
         id: videoID,
+        key: `${videoID}${Math.random()}`,
         name: data.items[0].snippet.title,
         thumbnail: data.items[0].snippet.thumbnails.default.url,
         savedDate: new Date(),
+        source: "YouTube",
       },
     ]);
   };
@@ -65,15 +69,17 @@ function ContextProvider({ children }) {
       ...state,
       {
         id: videoID,
+        key: `${videoID}${Math.random()}`,
         name: data.name,
         thumbnail: data.pictures.sizes[0].link,
         savedDate: new Date(),
+        source: "Vimeo",
       },
     ]);
   };
 
-  const deleteVideo = (id) => {
-    let newArray = [...videoData].filter((video) => video.id !== id);
+  const deleteVideo = (key) => {
+    let newArray = [...videoData].filter((video) => video.key !== key);
     setVideoData(newArray);
   };
 

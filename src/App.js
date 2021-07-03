@@ -11,13 +11,14 @@ function App() {
     <div className="App">
       <Header />
       {videoData.map((item) => (
-        <Card style={{ width: "18rem" }} key={`${item.id}${Math.random()}`}>
+        <Card style={{ width: "18rem" }} key={item.key}>
           <Card.Img variant="top" src={item.thumbnail} />
           <Card.Body>
             <Card.Title>{item.name}</Card.Title>
             <Card.Text>{`video ID: ${item.id}`}</Card.Text>
             <Card.Text>{`saved date: ${item.savedDate}`}</Card.Text>
-            <Button variant="primary" onClick={(e) => deleteVideo(item.id, e)}>
+            <Card.Text>{`source: ${item.source}`}</Card.Text>
+            <Button variant="primary" onClick={(e) => deleteVideo(item.key, e)}>
               Delete
             </Button>
           </Card.Body>
