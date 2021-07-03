@@ -7,17 +7,7 @@ const Context = React.createContext();
 
 function ContextProvider({ children }) {
   const [inputURL, setInputURL] = useState("empty");
-  const [videoData, setVideoData] = useState([
-    {
-      id: "7lCDEYXw3mM",
-      key: "7lCDEYXw3mM9",
-      name: "Google I/O 101: Q&A On Using Google APIs",
-      thumbnail: "https://i.ytimg.com/vi/7lCDEYXw3mM/default.jpg",
-      savedDate:
-        "Tue Feb 04 1992 21:49:21 GMT+0200 (Central European Summer Time)",
-      source: "YouTube/Hardcoded",
-    },
-  ]);
+  const [videoData, setVideoData] = useState([]);
 
   const handleInputURLChange = (e) => {
     setInputURL(e.currentTarget.value);
@@ -98,3 +88,14 @@ function ContextProvider({ children }) {
   );
 }
 export { ContextProvider, Context };
+
+//hardcoded state
+// {
+//   id: "7lCDEYXw3mM",
+//   key: "7lCDEYXw3mM9",
+//   name: "Google I/O 101: Q&A On Using Google APIs",
+//   thumbnail: "https://i.ytimg.com/vi/7lCDEYXw3mM/default.jpg",
+//   savedDate:
+//     "Tue Feb 04 1992 21:49:21 GMT+0200 (Central European Summer Time)",
+//   source: "YouTube/Hardcoded",
+// },
