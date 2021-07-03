@@ -6,7 +6,7 @@ import React from "react";
 const Context = React.createContext();
 
 function ContextProvider({ children }) {
-  const [inputURL, setInputURL] = useState("empty");
+  const [inputURL, setInputURL] = useState("");
   const [videoData, setVideoData] = useState([]);
 
   const handleInputURLChange = (e) => {
@@ -36,8 +36,12 @@ function ContextProvider({ children }) {
         key: `${videoID}${Math.random()}`,
         name: data.items[0].snippet.title,
         thumbnail: data.items[0].snippet.thumbnails.default.url,
+        viewCount: data.items[0].statistics.viewCount,
+        likeCount: data.items[0].statistics.likeCount,
         savedDate: new Date(),
+        favourite: false,
         source: "YouTube",
+        url: inputURL,
       },
     ]);
   };
@@ -65,7 +69,12 @@ function ContextProvider({ children }) {
         name: data.name,
         thumbnail: data.pictures.sizes[0].link,
         savedDate: new Date(),
+        viewCount: data.stats.plays,
+        likeCount: data.metadata.connections.likes.total,
+        savedDate: new Date(),
+        favourite: false,
         source: "Vimeo",
+        url: inputURL,
       },
     ]);
   };

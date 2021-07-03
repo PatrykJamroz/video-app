@@ -20,13 +20,22 @@ function App() {
               <Card.Title>{item.name}</Card.Title>
               <Card.Text>{`video ID: ${item.id}`}</Card.Text>
               <Card.Text>{`saved date: ${item.savedDate}`}</Card.Text>
-              <Card.Text>{`source: ${item.source}`}</Card.Text>
+              <Card.Text>{`views: ${item.viewCount}`}</Card.Text>
+              <Card.Text>{`likes: ${item.likeCount}`}</Card.Text>
+              <Card.Text>{`favourite: ${item.favourite}`}</Card.Text>
               <Button
                 variant="primary"
                 onClick={(e) => deleteVideo(item.key, e)}
               >
                 Delete
               </Button>
+              <Button
+                variant="primary"
+                onClick={(e) => window.open(item.url, "_blank")}
+              >
+                Watch on {item.source}
+              </Button>
+              <Button variant="secondary">Add to favourites</Button>
             </Card.Body>
           </Card>
         ))
