@@ -18,6 +18,8 @@ function ContextProvider({ children }) {
     e.preventDefault();
     if (inputURL.includes("youtu")) {
       handleYouTubeVideo(inputURL);
+    } else if (!inputURL.includes("http") && inputURL.startsWith("v")) {
+      fetchYouTubeData(inputURL);
     } else if (inputURL.includes("vimeo")) {
       const url = new URL(inputURL);
       const videoID = url.pathname.split("/");
