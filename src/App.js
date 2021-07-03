@@ -24,7 +24,7 @@ function App() {
               <Card.Text>{`likes: ${item.likeCount}`}</Card.Text>
               <Card.Text>{`favourite: ${item.favourite}`}</Card.Text>
               <Button
-                variant="primary"
+                variant="danger"
                 onClick={(e) => deleteVideo(item.key, e)}
               >
                 Delete
@@ -36,10 +36,12 @@ function App() {
                 Watch on {item.source}
               </Button>
               <Button
-                variant="secondary"
+                variant="success"
                 onClick={(e) => toggleFavourite(item.key, e)}
               >
-                Add to favourites
+                {item.favourite
+                  ? "Remove from favourites"
+                  : "Add to favourites"}
               </Button>
             </Card.Body>
           </Card>
