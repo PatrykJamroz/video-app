@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { youtubeApi } from "./APIs/youtubeAPI";
+import { vimeoApi } from "./APIs/vimeoAPI";
 import React from "react";
 
 const Context = React.createContext();
@@ -25,7 +26,10 @@ function ContextProvider({ children }) {
     e.preventDefault();
     if (inputURL.includes("youtu")) {
       handleYouTubeVideo(inputURL);
-      //console.log(videoData);
+    } else if (inputURL.includes("vimeo")) {
+      const url = new URL(inputURL);
+      const videoID = url.pathname.split("/");
+      fetchVimeoData(videoID[1]);
     }
   };
 
@@ -53,6 +57,19 @@ function ContextProvider({ children }) {
       const videoID = url.pathname.split("/");
       fetchYouTubeData(videoID[1]);
     }
+  };
+
+  const fetchVimeoData = async (videoID) => {
+    const data = await vimeoApi(videoID);
+    setVideoData((state) => [
+      ...state,
+      {
+        id: videoID,
+        name: data.name,
+        thumbnail: data.pictures.sizes[0].link,
+        savedDate: new Date(),
+      },
+    ]);
   };
 
   const deleteVideo = (id) => {
