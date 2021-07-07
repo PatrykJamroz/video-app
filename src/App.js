@@ -5,7 +5,7 @@ import { Context } from "./Context";
 import { useContext } from "react";
 
 function App() {
-  const { videoData, deleteVideo } = useContext(Context);
+  const { videoData, deleteVideo, toggleFavourite } = useContext(Context);
 
   return (
     <div className="App">
@@ -24,7 +24,7 @@ function App() {
               <Card.Text>{`likes: ${item.likeCount}`}</Card.Text>
               <Card.Text>{`favourite: ${item.favourite}`}</Card.Text>
               <Button
-                variant="primary"
+                variant="danger"
                 onClick={(e) => deleteVideo(item.key, e)}
               >
                 Delete
@@ -35,7 +35,14 @@ function App() {
               >
                 Watch on {item.source}
               </Button>
-              <Button variant="secondary">Add to favourites</Button>
+              <Button
+                variant="success"
+                onClick={(e) => toggleFavourite(item.key, e)}
+              >
+                {item.favourite
+                  ? "Remove from favourites"
+                  : "Add to favourites"}
+              </Button>
             </Card.Body>
           </Card>
         ))
