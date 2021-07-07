@@ -5,11 +5,15 @@ import { Context } from "./Context";
 import { useContext } from "react";
 
 function App() {
-  const { videoData, deleteVideo, toggleFavourite } = useContext(Context);
+  const { videoData, deleteVideo, toggleFavourite, handleFilterChange } =
+    useContext(Context);
 
   return (
     <div className="App">
       <Header />
+      <Button onClick={(e) => handleFilterChange("YouTube")}>Youtube</Button>
+      <Button onClick={(e) => handleFilterChange("Vimeo")}>Vimeo</Button>
+      <Button onClick={(e) => handleFilterChange("")}>All</Button>
       {videoData.length === 0 ? (
         <p>Nothing to show here. Let's add video!</p>
       ) : (
