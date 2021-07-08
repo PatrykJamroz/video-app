@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { youtubeApi } from "./APIs/youtubeAPI";
 import { vimeoApi } from "./APIs/vimeoAPI";
 import React from "react";
@@ -9,10 +9,10 @@ function ContextProvider({ children }) {
   const [inputURL, setInputURL] = useState("");
   const [videoData, setVideoData] = useState([]);
   const [filterType, setFilterType] = useState("");
+  const [videoSources, setVideoSources] = useState([""]);
 
   const handleInputURLChange = (e) => {
     setInputURL(e.currentTarget.value);
-    console.log(inputURL);
   };
 
   const handleVideoAdd = (e) => {
@@ -45,6 +45,7 @@ function ContextProvider({ children }) {
         url: inputURL,
       },
     ]);
+    setInputURL("");
   };
 
   const handleYouTubeVideo = (inputURL) => {
@@ -78,6 +79,7 @@ function ContextProvider({ children }) {
         url: inputURL,
       },
     ]);
+    setInputURL("");
   };
 
   const deleteVideo = (key) => {
@@ -115,6 +117,7 @@ function ContextProvider({ children }) {
         deleteVideo,
         toggleFavourite,
         handleFilterChange,
+        videoSources,
       }}
     >
       {children}

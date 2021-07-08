@@ -5,8 +5,13 @@ import { Context } from "./Context";
 import { useContext } from "react";
 
 function App() {
-  const { videoData, deleteVideo, toggleFavourite, handleFilterChange } =
-    useContext(Context);
+  const {
+    videoData,
+    deleteVideo,
+    toggleFavourite,
+    handleFilterChange,
+    videoSources,
+  } = useContext(Context);
 
   return (
     <div className="App">
