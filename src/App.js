@@ -5,11 +5,37 @@ import { Context } from "./Context";
 import { useContext } from "react";
 
 function App() {
-  const { videoData, deleteVideo, toggleFavourite } = useContext(Context);
+  const {
+    videoData,
+    deleteVideo,
+    toggleFavourite,
+    handleFilterChange,
+    videoSources,
+    sortDataBy,
+    deleteAllData,
+  } = useContext(Context);
 
   return (
     <div className="App">
       <Header />
+      {videoSources.map((item) => (
+        <p>{item}</p>
+      ))}
+      <Button onClick={(e) => handleFilterChange("YouTube")}>Youtube</Button>
+      <Button onClick={(e) => handleFilterChange("Vimeo")}>Vimeo</Button>
+      <Button onClick={(e) => handleFilterChange("")}>All</Button>
+      <Button variant="success" onClick={(e) => sortDataBy("savedDate")}>
+        By date
+      </Button>
+      <Button variant="success" onClick={(e) => sortDataBy("likeCount")}>
+        By likes
+      </Button>
+      <Button variant="success" onClick={(e) => sortDataBy("favourite")}>
+        Favourites
+      </Button>
+      <Button variant="danger" onClick={(e) => deleteAllData()}>
+        Remove all items
+      </Button>
       {videoData.length === 0 ? (
         <p>Nothing to show here. Let's add video!</p>
       ) : (

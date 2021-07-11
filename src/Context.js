@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { youtubeApi } from "./APIs/youtubeAPI";
 import { vimeoApi } from "./APIs/vimeoAPI";
 import React from "react";
@@ -8,10 +8,12 @@ const Context = React.createContext();
 function ContextProvider({ children }) {
   const [inputURL, setInputURL] = useState("");
   const [videoData, setVideoData] = useState([]);
+  const [filterType, setFilterType] = useState("");
+  const [videoSources, setVideoSources] = useState([""]);
+  const [wasSortedBy, setWasSortedBy] = useState(false);
 
   const handleInputURLChange = (e) => {
     setInputURL(e.currentTarget.value);
-    console.log(inputURL);
   };
 
   const handleVideoAdd = (e) => {
@@ -44,6 +46,7 @@ function ContextProvider({ children }) {
         url: inputURL,
       },
     ]);
+    setInputURL("");
   };
 
   const handleYouTubeVideo = (inputURL) => {
@@ -77,15 +80,21 @@ function ContextProvider({ children }) {
         url: inputURL,
       },
     ]);
+    setInputURL("");
   };
 
   const deleteVideo = (key) => {
     let newArray = [...videoData].filter((video) => video.key !== key);
+    setWasSortedBy(true);
     setVideoData(newArray);
   };
 
+  const deleteAllData = () => {
+    setVideoData([]);
+  };
+
   const toggleFavourite = (key) => {
-    const newArray = [...videoData];
+    let newArray = [...videoData];
     newArray.map((item) => {
       if (item.key === key) {
         item.favourite = !item.favourite;
@@ -94,15 +103,50 @@ function ContextProvider({ children }) {
     setVideoData(newArray);
   };
 
+  const handleFilterChange = (type) => {
+    setFilterType(type);
+  };
+
+  const sourceFiltering = useMemo(() => {
+    return filterType
+      ? videoData.filter((item) => item.source === filterType)
+      : videoData;
+  }, [videoData, filterType]);
+
+  const sortDataBy = (sortBy) => {
+    if (wasSortedBy) {
+      const reversedArr = [...videoData].reverse();
+      setVideoData(reversedArr);
+    } else {
+      const sortedArr = [...videoData].sort((a, b) => b[sortBy] - a[sortBy]);
+      setWasSortedBy(true);
+      setVideoData(sortedArr);
+    }
+  };
+
+  // const getSources = (videoData) => {
+  //   let newArr = [...videoData];
+  //   const sourcesArr = newArr.map((item) => item.source);
+  //   setVideoSources(sourcesArr);
+  // };
+
+  // useEffect(() => {
+  //   getSources();
+  // }, [videoData]);
+
   return (
     <Context.Provider
       value={{
         inputURL,
-        videoData,
+        videoData: sourceFiltering,
         handleInputURLChange,
         handleVideoAdd,
         deleteVideo,
         toggleFavourite,
+        handleFilterChange,
+        videoSources,
+        sortDataBy,
+        deleteAllData,
       }}
     >
       {children}
