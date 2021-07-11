@@ -10,6 +10,7 @@ function ContextProvider({ children }) {
   const [videoData, setVideoData] = useState([]);
   const [filterType, setFilterType] = useState("");
   const [videoSources, setVideoSources] = useState([""]);
+  const [wasSortedBy, setWasSortedBy] = useState(false);
 
   const handleInputURLChange = (e) => {
     setInputURL(e.currentTarget.value);
@@ -84,11 +85,16 @@ function ContextProvider({ children }) {
 
   const deleteVideo = (key) => {
     let newArray = [...videoData].filter((video) => video.key !== key);
+    setWasSortedBy(true);
     setVideoData(newArray);
   };
 
+  const deleteAllData = () => {
+    setVideoData([]);
+  };
+
   const toggleFavourite = (key) => {
-    const newArray = [...videoData];
+    let newArray = [...videoData];
     newArray.map((item) => {
       if (item.key === key) {
         item.favourite = !item.favourite;
@@ -107,6 +113,27 @@ function ContextProvider({ children }) {
       : videoData;
   }, [videoData, filterType]);
 
+  const sortDataBy = (sortBy) => {
+    if (wasSortedBy) {
+      const reversedArr = [...videoData].reverse();
+      setVideoData(reversedArr);
+    } else {
+      const sortedArr = [...videoData].sort((a, b) => b[sortBy] - a[sortBy]);
+      setWasSortedBy(true);
+      setVideoData(sortedArr);
+    }
+  };
+
+  // const getSources = (videoData) => {
+  //   let newArr = [...videoData];
+  //   const sourcesArr = newArr.map((item) => item.source);
+  //   setVideoSources(sourcesArr);
+  // };
+
+  // useEffect(() => {
+  //   getSources();
+  // }, [videoData]);
+
   return (
     <Context.Provider
       value={{
@@ -118,6 +145,8 @@ function ContextProvider({ children }) {
         toggleFavourite,
         handleFilterChange,
         videoSources,
+        sortDataBy,
+        deleteAllData,
       }}
     >
       {children}
