@@ -7,7 +7,13 @@ const Context = React.createContext();
 
 function ContextProvider({ children }) {
   const [inputURL, setInputURL] = useState("");
-  const [videoData, setVideoData] = useState([]);
+  const [videoData, setVideoData] = useState(() => {
+    const videoData = localStorage.getItem("videoData");
+    if (videoData) {
+      return JSON.parse(videoData);
+    }
+    return [];
+  });
   const [filterType, setFilterType] = useState("");
   const [videoSources, setVideoSources] = useState([""]);
   const [wasSortedBy, setWasSortedBy] = useState(false);
@@ -123,6 +129,10 @@ function ContextProvider({ children }) {
       setVideoData(sortedArr);
     }
   };
+
+  useEffect(() => {
+    localStorage.setItem("videoData", JSON.stringify(videoData));
+  }, [videoData]);
 
   // const getSources = (videoData) => {
   //   let newArr = [...videoData];
