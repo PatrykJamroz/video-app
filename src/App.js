@@ -1,8 +1,11 @@
 import Header from "./components/Header";
 import Card from "react-bootstrap/Card";
+import { CardGroup } from "react-bootstrap";
+import { Row } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import { Context } from "./Context";
 import { useContext } from "react";
+import { width } from "dom-helpers";
 
 function App() {
   const {
@@ -36,43 +39,50 @@ function App() {
       <Button variant="danger" onClick={(e) => deleteAllData()}>
         Remove all items
       </Button>
-      {videoData.length === 0 ? (
-        <p>Nothing to show here. Let's add video!</p>
-      ) : (
-        videoData.map((item) => (
-          <Card style={{ width: "18rem" }} key={item.key}>
-            <Card.Img variant="top" src={item.thumbnail} />
-            <Card.Body>
-              <Card.Title>{item.name}</Card.Title>
-              <Card.Text>{`video ID: ${item.id}`}</Card.Text>
-              <Card.Text>{`saved date: ${item.savedDate}`}</Card.Text>
-              <Card.Text>{`views: ${item.viewCount}`}</Card.Text>
-              <Card.Text>{`likes: ${item.likeCount}`}</Card.Text>
-              <Card.Text>{`favourite: ${item.favourite}`}</Card.Text>
-              <Button
-                variant="danger"
-                onClick={(e) => deleteVideo(item.key, e)}
+      <CardGroup>
+        <Row xs={1} md={6} className="g-4">
+          {videoData.length === 0 ? (
+            <p>Nothing to show here. Let's add video!</p>
+          ) : (
+            videoData.map((item) => (
+              <Card
+                style={{ width: "18rem", maxWidth: "300px " }}
+                key={item.key}
               >
-                Delete
-              </Button>
-              <Button
-                variant="primary"
-                onClick={(e) => window.open(item.url, "_blank")}
-              >
-                Watch on {item.source}
-              </Button>
-              <Button
-                variant="success"
-                onClick={(e) => toggleFavourite(item.key, e)}
-              >
-                {item.favourite
-                  ? "Remove from favourites"
-                  : "Add to favourites"}
-              </Button>
-            </Card.Body>
-          </Card>
-        ))
-      )}
+                <Card.Img variant="top" src={item.thumbnail} />
+                <Card.Body>
+                  <Card.Title>{item.name}</Card.Title>
+                  <Card.Text>{`video ID: ${item.id}`}</Card.Text>
+                  <Card.Text>{`saved date: ${item.savedDate}`}</Card.Text>
+                  <Card.Text>{`views: ${item.viewCount}`}</Card.Text>
+                  <Card.Text>{`likes: ${item.likeCount}`}</Card.Text>
+                  <Card.Text>{`favourite: ${item.favourite}`}</Card.Text>
+                  <Button
+                    variant="danger"
+                    onClick={(e) => deleteVideo(item.key, e)}
+                  >
+                    Delete
+                  </Button>
+                  <Button
+                    variant="primary"
+                    onClick={(e) => window.open(item.url, "_blank")}
+                  >
+                    Watch on {item.source}
+                  </Button>
+                  <Button
+                    variant="success"
+                    onClick={(e) => toggleFavourite(item.key, e)}
+                  >
+                    {item.favourite
+                      ? "Remove from favourites"
+                      : "Add to favourites"}
+                  </Button>
+                </Card.Body>
+              </Card>
+            ))
+          )}
+        </Row>
+      </CardGroup>
     </div>
   );
 }
