@@ -40,13 +40,13 @@ function App() {
         Remove all items
       </Button>
       <CardGroup>
-        <Row xs={1} md={6} className="g-4">
+        <Row xs={1} md={3} className="g-4">
           {videoData.length === 0 ? (
             <p>Nothing to show here. Let's add video!</p>
           ) : (
             videoData.map((item) => (
               <Card
-                style={{ width: "18rem", maxWidth: "300px " }}
+                style={{ minWidth: "18rem", maxWidth: "300px " }}
                 key={item.key}
               >
                 <Card.Img variant="top" src={item.thumbnail} />
