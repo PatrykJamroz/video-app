@@ -5,7 +5,7 @@ import { Row } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import { Context } from "./Context";
 import { useContext } from "react";
-import { width } from "dom-helpers";
+import Form from "react-bootstrap/Form";
 
 function App() {
   const {
@@ -16,6 +16,8 @@ function App() {
     videoSources,
     sortDataBy,
     deleteAllData,
+    exportToJsonFile,
+    handleJsonImport,
   } = useContext(Context);
 
   return (
@@ -39,6 +41,18 @@ function App() {
       <Button variant="danger" onClick={(e) => deleteAllData()}>
         Remove all items
       </Button>
+      <Button variant="danger" onClick={(e) => exportToJsonFile()}>
+        Export data
+      </Button>
+      <Form>
+        <Form.Group>
+          <Form.File
+            id="exampleFormControlFile1"
+            label="Import data"
+            onChange={handleJsonImport}
+          />
+        </Form.Group>
+      </Form>
       <CardGroup>
         <Row xs={1} md={3} className="g-4">
           {videoData.length === 0 ? (

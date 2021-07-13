@@ -43,7 +43,7 @@ function ContextProvider({ children }) {
         id: videoID,
         key: `${videoID}${Math.random()}`,
         name: data.items[0].snippet.title,
-        thumbnail: data.items[0].snippet.thumbnails.default.url,
+        thumbnail: data.items[0].snippet.thumbnails.medium.url, //default, medium, high
         viewCount: data.items[0].statistics.viewCount,
         likeCount: data.items[0].statistics.likeCount,
         savedDate: new Date(),
@@ -76,7 +76,7 @@ function ContextProvider({ children }) {
         id: videoID,
         key: `${videoID}${Math.random()}`,
         name: data.name,
-        thumbnail: data.pictures.sizes[0].link,
+        thumbnail: data.pictures.sizes[2].link, //0-8
         savedDate: new Date(),
         viewCount: data.stats.plays,
         likeCount: data.metadata.connections.likes.total,
@@ -130,6 +130,29 @@ function ContextProvider({ children }) {
     }
   };
 
+  const exportToJsonFile = () => {
+    let dataStr = JSON.stringify(videoData);
+    let dataUri =
+      "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
+
+    let exportFileDefaultName = "videoData.json";
+
+    let linkElement = document.createElement("a");
+    linkElement.setAttribute("href", dataUri);
+    linkElement.setAttribute("download", exportFileDefaultName);
+    linkElement.click();
+  };
+
+  const handleJsonImport = (e) => {
+    e.preventDefault();
+    const fileReader = new FileReader();
+    fileReader.readAsText(e.target.files[0], "UTF-8");
+    fileReader.onload = (e) => {
+      const convertedData = JSON.parse(e.target.result);
+      setVideoData([...convertedData]);
+    };
+  };
+
   useEffect(() => {
     localStorage.setItem("videoData", JSON.stringify(videoData));
   }, [videoData]);
@@ -157,6 +180,8 @@ function ContextProvider({ children }) {
         videoSources,
         sortDataBy,
         deleteAllData,
+        exportToJsonFile,
+        handleJsonImport,
       }}
     >
       {children}
