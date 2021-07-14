@@ -34,25 +34,6 @@ function ContextProvider({ children }) {
     } else {
       console.log("Incorrect URL! - handleVideoAdd");
     }
-
-    // if (inputURL.includes(".com") || inputURL.includes(".be")){
-    //   if(inputURL.includes("http")) {
-    //     checkVideoSource(inputURL)
-    //   } else {
-    //     const properURL = `https://${inputURL}`
-    //     checkVideoSource(properURL)
-    //   }
-    // }
-
-    // if (inputURL.includes("youtu")) {
-    //   handleYouTubeVideo(inputURL);
-    // } else if (!inputURL.includes("http") && inputURL.length === 11) {
-    //   fetchYouTubeData(inputURL);
-    // } else if (inputURL.includes("vimeo")) {
-    //   const url = new URL(inputURL);
-    //   const videoID = url.pathname.split("/");
-    //   fetchVimeoData(videoID[1]);
-    // }
   };
 
   const checkVideoSource = (inputURL) => {
@@ -224,16 +205,6 @@ function ContextProvider({ children }) {
   useEffect(() => {
     localStorage.setItem("videoData", JSON.stringify(videoData));
   }, [videoData]);
-
-  // const getSources = (videoData) => {
-  //   let newArr = [...videoData];
-  //   const sourcesArr = newArr.map((item) => item.source);
-  //   setVideoSources(sourcesArr);
-  // };
-
-  // useEffect(() => {
-  //   getSources();
-  // }, [videoData]);
 
   return (
     <Context.Provider
