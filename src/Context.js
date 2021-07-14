@@ -24,14 +24,63 @@ function ContextProvider({ children }) {
 
   const handleVideoAdd = (e) => {
     e.preventDefault();
-    if (inputURL.includes("youtu")) {
+
+    const source = checkVideoSource(inputURL);
+
+    if (source === "youtube") {
       handleYouTubeVideo(inputURL);
-    } else if (!inputURL.includes("http") && inputURL.startsWith("v")) {
-      fetchYouTubeData(inputURL);
-    } else if (inputURL.includes("vimeo")) {
-      const url = new URL(inputURL);
-      const videoID = url.pathname.split("/");
-      fetchVimeoData(videoID[1]);
+    } else if (source === "vimeo") {
+      handleVimeoVideo(inputURL);
+    } else {
+      console.log("Incorrect URL! - handleVideoAdd");
+    }
+
+    // if (inputURL.includes(".com") || inputURL.includes(".be")){
+    //   if(inputURL.includes("http")) {
+    //     checkVideoSource(inputURL)
+    //   } else {
+    //     const properURL = `https://${inputURL}`
+    //     checkVideoSource(properURL)
+    //   }
+    // }
+
+    // if (inputURL.includes("youtu")) {
+    //   handleYouTubeVideo(inputURL);
+    // } else if (!inputURL.includes("http") && inputURL.length === 11) {
+    //   fetchYouTubeData(inputURL);
+    // } else if (inputURL.includes("vimeo")) {
+    //   const url = new URL(inputURL);
+    //   const videoID = url.pathname.split("/");
+    //   fetchVimeoData(videoID[1]);
+    // }
+  };
+
+  const checkVideoSource = (inputURL) => {
+    if (inputURL.includes("youtu") || inputURL.length === 11) {
+      return "youtube";
+    } else if (inputURL.includes("vimeo") || inputURL.length === 9) {
+      return "vimeo";
+    } else {
+      console.log("incorrect URL!");
+    }
+  };
+
+  const checkURL = (inputURL) => {
+    if (!inputURL.includes("http")) {
+      const properURL = `https://${inputURL}`;
+      return properURL;
+    } else {
+      return inputURL;
+    }
+  };
+
+  const checkInputType = (inputURL) => {
+    if (!inputURL.includes("http") && inputURL.length === 11) {
+      return "id";
+    } else if (!inputURL.includes("http") && inputURL.length === 9) {
+      return "id";
+    } else {
+      return "url";
     }
   };
 
@@ -56,15 +105,21 @@ function ContextProvider({ children }) {
   };
 
   const handleYouTubeVideo = (inputURL) => {
-    const url = new URL(inputURL);
+    const inputType = checkInputType(inputURL);
 
-    if (inputURL.includes("youtube.com")) {
-      const params = url.searchParams;
-      const videoID = params.get("v");
-      fetchYouTubeData(videoID);
+    if (inputType === "id") {
+      fetchYouTubeData(inputURL);
     } else {
-      const videoID = url.pathname.split("/");
-      fetchYouTubeData(videoID[1]);
+      const checkedURL = checkURL(inputURL);
+      const url = new URL(checkedURL);
+      if (inputURL.includes("youtube.com")) {
+        const params = url.searchParams;
+        const videoID = params.get("v");
+        fetchYouTubeData(videoID);
+      } else {
+        const videoID = url.pathname.split("/");
+        fetchYouTubeData(videoID[1]);
+      }
     }
   };
 
@@ -87,6 +142,19 @@ function ContextProvider({ children }) {
       },
     ]);
     setInputURL("");
+  };
+
+  const handleVimeoVideo = (inputURL) => {
+    const inputType = checkInputType(inputURL);
+
+    if (inputType === "id") {
+      fetchVimeoData(inputURL);
+    } else {
+      const checkedURL = checkURL(inputURL);
+      const url = new URL(checkedURL);
+      const videoID = url.pathname.split("/");
+      fetchVimeoData(videoID[1]);
+    }
   };
 
   const deleteVideo = (key) => {
