@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 import { Context } from "./Context";
 import { useContext } from "react";
 import Form from "react-bootstrap/Form";
+import { Modal } from "react-bootstrap";
 
 function App() {
   const {
@@ -18,6 +19,10 @@ function App() {
     deleteAllData,
     exportToJsonFile,
     handleJsonImport,
+    handleModalClose,
+    handleModalShow,
+    showModal,
+    modalData,
   } = useContext(Context);
 
   return (
@@ -44,6 +49,32 @@ function App() {
       <Button variant="danger" onClick={(e) => exportToJsonFile()}>
         Export data
       </Button>
+      <Modal
+        show={showModal}
+        onHide={handleModalClose}
+        backdrop="static"
+        keyboard={true}
+        size="lg"
+        align="center"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>{modalData.name}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <iframe
+            id="inlineFrameExample"
+            title="Inline Frame Example"
+            src={modalData.src}
+            width="640"
+            height="360"
+          ></iframe>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleModalClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <Form>
         <Form.Group>
           <Form.File
@@ -63,7 +94,11 @@ function App() {
                 style={{ minWidth: "18rem", maxWidth: "300px " }}
                 key={item.key}
               >
-                <Card.Img variant="top" src={item.thumbnail} />
+                <Card.Img
+                  variant="top"
+                  src={item.thumbnail}
+                  onClick={(e) => handleModalShow(item)}
+                />
                 <Card.Body>
                   <Card.Title>{item.name}</Card.Title>
                   <Card.Text>{`video ID: ${item.id}`}</Card.Text>

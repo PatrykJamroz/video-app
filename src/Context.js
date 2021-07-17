@@ -17,6 +17,28 @@ function ContextProvider({ children }) {
   const [filterType, setFilterType] = useState("");
   const [videoSources, setVideoSources] = useState([""]);
   const [wasSortedBy, setWasSortedBy] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [modalData, setModalData] = useState({});
+
+  const createModalSrc = (videoItem) => {
+    if (checkVideoSource(videoItem.id) === "youtube") {
+      setModalData({
+        src: `http://www.youtube.com/embed/${videoItem.id}`,
+        name: videoItem.name,
+      });
+    } else {
+      setModalData({
+        src: `https://player.vimeo.com/video/${videoItem.id}`,
+        name: videoItem.name,
+      });
+    }
+  };
+
+  const handleModalShow = (videoID) => {
+    createModalSrc(videoID);
+    setShowModal(true);
+  };
+  const handleModalClose = () => setShowModal(false);
 
   const handleInputURLChange = (e) => {
     setInputURL(e.currentTarget.value);
@@ -221,6 +243,10 @@ function ContextProvider({ children }) {
         deleteAllData,
         exportToJsonFile,
         handleJsonImport,
+        handleModalClose,
+        handleModalShow,
+        showModal,
+        modalData,
       }}
     >
       {children}
