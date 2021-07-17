@@ -19,10 +19,12 @@ function App() {
     deleteAllData,
     exportToJsonFile,
     handleJsonImport,
-    handleModalClose,
-    handleModalShow,
-    showModal,
+    handleVideoModalClose,
+    handleVideoModalShow,
+    showVideoModal,
     modalData,
+    showWrongUrlModal,
+    handleWrongUrlModalClose,
   } = useContext(Context);
 
   return (
@@ -50,8 +52,8 @@ function App() {
         Export data
       </Button>
       <Modal
-        show={showModal}
-        onHide={handleModalClose}
+        show={showVideoModal}
+        onHide={handleVideoModalClose}
         backdrop="static"
         keyboard={true}
         size="lg"
@@ -70,7 +72,25 @@ function App() {
           ></iframe>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleModalClose}>
+          <Button variant="secondary" onClick={handleVideoModalClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal
+        show={showWrongUrlModal}
+        onHide={handleWrongUrlModalClose}
+        backdrop="static"
+        keyboard={true}
+        size="sm"
+        align="center"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Error!</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Incorrect video URL or ID!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleWrongUrlModalClose}>
             Close
           </Button>
         </Modal.Footer>
@@ -97,7 +117,7 @@ function App() {
                 <Card.Img
                   variant="top"
                   src={item.thumbnail}
-                  onClick={(e) => handleModalShow(item)}
+                  onClick={(e) => handleVideoModalShow(item)}
                 />
                 <Card.Body>
                   <Card.Title>{item.name}</Card.Title>

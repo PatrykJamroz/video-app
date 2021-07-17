@@ -17,8 +17,9 @@ function ContextProvider({ children }) {
   const [filterType, setFilterType] = useState("");
   const [videoSources, setVideoSources] = useState([""]);
   const [wasSortedBy, setWasSortedBy] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [showVideoModal, setShowVideoModal] = useState(false);
   const [modalData, setModalData] = useState({});
+  const [showWrongUrlModal, setShowWrongUrlModal] = useState(false);
 
   const createModalSrc = (videoItem) => {
     if (checkVideoSource(videoItem.id) === "youtube") {
@@ -34,11 +35,15 @@ function ContextProvider({ children }) {
     }
   };
 
-  const handleModalShow = (videoID) => {
+  const handleVideoModalShow = (videoID) => {
     createModalSrc(videoID);
-    setShowModal(true);
+    setShowVideoModal(true);
   };
-  const handleModalClose = () => setShowModal(false);
+  const handleVideoModalClose = () => setShowVideoModal(false);
+
+  const handleWrongUrlModalShow = () => setShowWrongUrlModal(true);
+
+  const handleWrongUrlModalClose = () => setShowWrongUrlModal(false);
 
   const handleInputURLChange = (e) => {
     setInputURL(e.currentTarget.value);
@@ -54,7 +59,7 @@ function ContextProvider({ children }) {
     } else if (source === "vimeo") {
       handleVimeoVideo(inputURL);
     } else {
-      console.log("Incorrect URL! - handleVideoAdd");
+      handleWrongUrlModalShow();
     }
   };
 
@@ -63,8 +68,6 @@ function ContextProvider({ children }) {
       return "youtube";
     } else if (inputURL.includes("vimeo") || inputURL.length === 9) {
       return "vimeo";
-    } else {
-      console.log("incorrect URL!");
     }
   };
 
@@ -89,22 +92,26 @@ function ContextProvider({ children }) {
 
   const fetchYouTubeData = async (videoID) => {
     const data = await youtubeApi(videoID);
-    setVideoData((state) => [
-      ...state,
-      {
-        id: videoID,
-        key: `${videoID}${Math.random()}`,
-        name: data.items[0].snippet.title,
-        thumbnail: data.items[0].snippet.thumbnails.medium.url, //default, medium, high
-        viewCount: data.items[0].statistics.viewCount,
-        likeCount: data.items[0].statistics.likeCount,
-        savedDate: new Date(),
-        favourite: false,
-        source: "YouTube",
-        url: inputURL,
-      },
-    ]);
-    setInputURL("");
+    if (data.items.length === 0) {
+      handleWrongUrlModalShow();
+    } else {
+      setVideoData((state) => [
+        ...state,
+        {
+          id: videoID,
+          key: `${videoID}${Math.random()}`,
+          name: data.items[0].snippet.title,
+          thumbnail: data.items[0].snippet.thumbnails.medium.url, //default, medium, high
+          viewCount: data.items[0].statistics.viewCount,
+          likeCount: data.items[0].statistics.likeCount,
+          savedDate: new Date(),
+          favourite: false,
+          source: "YouTube",
+          url: inputURL,
+        },
+      ]);
+      setInputURL("");
+    }
   };
 
   const handleYouTubeVideo = (inputURL) => {
@@ -128,23 +135,28 @@ function ContextProvider({ children }) {
 
   const fetchVimeoData = async (videoID) => {
     const data = await vimeoApi(videoID);
-    setVideoData((state) => [
-      ...state,
-      {
-        id: videoID,
-        key: `${videoID}${Math.random()}`,
-        name: data.name,
-        thumbnail: data.pictures.sizes[2].link, //0-8
-        savedDate: new Date(),
-        viewCount: data.stats.plays,
-        likeCount: data.metadata.connections.likes.total,
-        savedDate: new Date(),
-        favourite: false,
-        source: "Vimeo",
-        url: inputURL,
-      },
-    ]);
-    setInputURL("");
+
+    if (data.hasOwnProperty("error")) {
+      handleWrongUrlModalShow();
+    } else {
+      setVideoData((state) => [
+        ...state,
+        {
+          id: videoID,
+          key: `${videoID}${Math.random()}`,
+          name: data.name,
+          thumbnail: data.pictures.sizes[2].link, //0-8
+          savedDate: new Date(),
+          viewCount: data.stats.plays,
+          likeCount: data.metadata.connections.likes.total,
+          savedDate: new Date(),
+          favourite: false,
+          source: "Vimeo",
+          url: inputURL,
+        },
+      ]);
+      setInputURL("");
+    }
   };
 
   const handleVimeoVideo = (inputURL) => {
@@ -243,10 +255,13 @@ function ContextProvider({ children }) {
         deleteAllData,
         exportToJsonFile,
         handleJsonImport,
-        handleModalClose,
-        handleModalShow,
-        showModal,
+        handleVideoModalClose,
+        handleVideoModalShow,
+        showVideoModal,
         modalData,
+        showWrongUrlModal,
+        handleWrongUrlModalShow,
+        handleWrongUrlModalClose,
       }}
     >
       {children}
