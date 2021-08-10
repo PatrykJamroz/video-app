@@ -1,4 +1,4 @@
-import Header from "./components/Header";
+import Header from "./components/Header.tsx";
 import Card from "react-bootstrap/Card";
 import { CardGroup } from "react-bootstrap";
 import { Row } from "react-bootstrap";
