@@ -1,4 +1,4 @@
-import { API_KEY } from "../crede";
+import { API_KEY } from "../crede.ts";
 
 export async function vimeoApi(videoID) {
   const url = `https://api.vimeo.com/videos/${videoID}/?access_token=${API_KEY.vimeo}`;
