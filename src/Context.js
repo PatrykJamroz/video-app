@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { youtubeApi } from "./APIs/youtubeAPI";
-import { vimeoApi } from "./APIs/vimeoAPI";
+import { youtubeApi } from "./APIs/youtubeAPI.ts";
+import { vimeoApi } from "./APIs/vimeoAPI.ts";
 import React from "react";
 
 const Context = React.createContext();
