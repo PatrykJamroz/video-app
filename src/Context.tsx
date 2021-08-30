@@ -1,12 +1,52 @@
-import { useEffect, useMemo, useState } from "react";
+import { ReactNode, ReactText, useEffect, useMemo, useState } from "react";
 import { youtubeApi } from "./APIs/youtubeAPI";
 import { vimeoApi } from "./APIs/vimeoAPI";
 import React from "react";
 import type { FormEvent } from "react";
 
-const Context = React.createContext(undefined);
+interface ContextInterface {
+  inputURL?: string;
+  videoData?: any;
+  handleInputURLChange?: any;
+  handleVideoAdd?: any;
+  deleteVideo?: any;
+  toggleFavourite?: any;
+  handleFilterChange?: any;
+  videoSources?: any;
+  sortDataBy?: any;
+  deleteAllData?: () => void;
+  exportToJsonFile?: () => void;
+  handleJsonImport?: any;
+  handleVideoModalClose?: () => void;
+  handleVideoModalShow?: any;
+  showVideoModal?: any;
+  modalData?: ModalDataInterface;
+  showWrongUrlModal?: boolean;
+  handleWrongUrlModalShow?: () => void;
+  handleWrongUrlModalClose?: () => void;
+}
 
-function ContextProvider({ children }) {
+interface ModalDataInterface {
+  src?: string;
+  name?: string;
+}
+
+interface VideoItemInterface {
+  id: string;
+  key: string;
+  name: string;
+  thumbnail: string;
+  viewCount: number;
+  likeCount: number;
+  savedDate: Date;
+  favourite: boolean;
+  source: string;
+  url: string;
+}
+
+const Context = React.createContext<ContextInterface>({});
+
+const ContextProvider: React.FC = ({ children }) => {
   const [inputURL, setInputURL] = useState("");
   const [videoData, setVideoData] = useState(() => {
     const videoData = localStorage.getItem("videoData");
@@ -22,7 +62,7 @@ function ContextProvider({ children }) {
   const [modalData, setModalData] = useState({});
   const [showWrongUrlModal, setShowWrongUrlModal] = useState(false);
 
-  const createModalSrc = (videoItem) => {
+  const createModalSrc = (videoItem: VideoItemInterface) => {
     if (checkVideoSource(videoItem.id) === "youtube") {
       setModalData({
         src: `http://www.youtube.com/embed/${videoItem.id}`,
@@ -36,8 +76,8 @@ function ContextProvider({ children }) {
     }
   };
 
-  const handleVideoModalShow = (videoID) => {
-    createModalSrc(videoID);
+  const handleVideoModalShow = (videoItem: VideoItemInterface) => {
+    createModalSrc(videoItem);
     setShowVideoModal(true);
   };
   const handleVideoModalClose = () => setShowVideoModal(false);
@@ -46,7 +86,7 @@ function ContextProvider({ children }) {
 
   const handleWrongUrlModalClose = () => setShowWrongUrlModal(false);
 
-  const handleInputURLChange = (e) => {
+  const handleInputURLChange = (e: FormEvent<HTMLFormElement>) => {
     setInputURL(e.currentTarget.value);
   };
 
@@ -64,7 +104,7 @@ function ContextProvider({ children }) {
     }
   };
 
-  const checkVideoSource = (inputURL) => {
+  const checkVideoSource = (inputURL: string) => {
     if (inputURL.includes("youtu") || inputURL.length === 11) {
       return "youtube";
     } else if (inputURL.includes("vimeo") || inputURL.length === 9) {
@@ -72,7 +112,7 @@ function ContextProvider({ children }) {
     }
   };
 
-  const checkURL = (inputURL) => {
+  const checkURL = (inputURL: string) => {
     if (!inputURL.includes("http")) {
       const properURL = `https://${inputURL}`;
       return properURL;
@@ -81,7 +121,7 @@ function ContextProvider({ children }) {
     }
   };
 
-  const checkInputType = (inputURL) => {
+  const checkInputType = (inputURL: string) => {
     if (!inputURL.includes("http") && inputURL.length === 11) {
       return "id";
     } else if (!inputURL.includes("http") && inputURL.length === 9) {
@@ -91,12 +131,12 @@ function ContextProvider({ children }) {
     }
   };
 
-  const fetchYouTubeData = async (videoID) => {
-    const data = await youtubeApi(videoID);
+  const fetchYouTubeData = async (videoID: string | null) => {
+    const data = await youtubeApi((videoID = ""));
     if (data.items.length === 0) {
       handleWrongUrlModalShow();
     } else {
-      setVideoData((state) => [
+      setVideoData((state: any) => [
         ...state,
         {
           id: videoID,
@@ -115,7 +155,7 @@ function ContextProvider({ children }) {
     }
   };
 
-  const handleYouTubeVideo = (inputURL) => {
+  const handleYouTubeVideo = (inputURL: string) => {
     const inputType = checkInputType(inputURL);
 
     if (inputType === "id") {
@@ -134,13 +174,13 @@ function ContextProvider({ children }) {
     }
   };
 
-  const fetchVimeoData = async (videoID) => {
-    const data = await vimeoApi(videoID);
+  const fetchVimeoData = async (videoID: string | null) => {
+    const data = await vimeoApi((videoID = ""));
 
     if (data.hasOwnProperty("error")) {
       handleWrongUrlModalShow();
     } else {
-      setVideoData((state) => [
+      setVideoData((state: any) => [
         ...state,
         {
           id: videoID,
@@ -150,7 +190,6 @@ function ContextProvider({ children }) {
           savedDate: new Date(),
           viewCount: data.stats.plays,
           likeCount: data.metadata.connections.likes.total,
-          savedDate: new Date(),
           favourite: false,
           source: "Vimeo",
           url: inputURL,
@@ -160,7 +199,7 @@ function ContextProvider({ children }) {
     }
   };
 
-  const handleVimeoVideo = (inputURL) => {
+  const handleVimeoVideo = (inputURL: string) => {
     const inputType = checkInputType(inputURL);
 
     if (inputType === "id") {
@@ -173,7 +212,7 @@ function ContextProvider({ children }) {
     }
   };
 
-  const deleteVideo = (key) => {
+  const deleteVideo = (key: string) => {
     let newArray = [...videoData].filter((video) => video.key !== key);
     setWasSortedBy(true);
     setVideoData(newArray);
@@ -183,7 +222,7 @@ function ContextProvider({ children }) {
     setVideoData([]);
   };
 
-  const toggleFavourite = (key) => {
+  const toggleFavourite = (key: string) => {
     let newArray = [...videoData];
     newArray.map((item) => {
       if (item.key === key) {
@@ -193,17 +232,19 @@ function ContextProvider({ children }) {
     setVideoData(newArray);
   };
 
-  const handleFilterChange = (type) => {
+  const handleFilterChange = (type: string) => {
     setFilterType(type);
   };
 
   const sourceFiltering = useMemo(() => {
     return filterType
-      ? videoData.filter((item) => item.source === filterType)
+      ? videoData.filter(
+          (item: VideoItemInterface) => item.source === filterType
+        )
       : videoData;
   }, [videoData, filterType]);
 
-  const sortDataBy = (sortBy) => {
+  const sortDataBy = (sortBy: string) => {
     if (wasSortedBy) {
       const reversedArr = [...videoData].reverse();
       setVideoData(reversedArr);
@@ -227,11 +268,11 @@ function ContextProvider({ children }) {
     linkElement.click();
   };
 
-  const handleJsonImport = (e) => {
+  const handleJsonImport = (e: any) => {
     e.preventDefault();
     const fileReader = new FileReader();
     fileReader.readAsText(e.target.files[0], "UTF-8");
-    fileReader.onload = (e) => {
+    fileReader.onload = (e: any) => {
       const convertedData = JSON.parse(e.target.result);
       setVideoData([...convertedData]);
     };
@@ -268,7 +309,7 @@ function ContextProvider({ children }) {
       {children}
     </Context.Provider>
   );
-}
+};
 export { ContextProvider, Context };
 
 //hardcoded state
