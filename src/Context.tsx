@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { youtubeApi } from "./APIs/youtubeAPI.ts";
-import { vimeoApi } from "./APIs/vimeoAPI.ts";
+import { youtubeApi } from "./APIs/youtubeAPI";
+import { vimeoApi } from "./APIs/vimeoAPI";
 import React from "react";
+import type { FormEvent } from "react";
 
-const Context = React.createContext();
+const Context = React.createContext(undefined);
 
 function ContextProvider({ children }) {
   const [inputURL, setInputURL] = useState("");
@@ -49,7 +50,7 @@ function ContextProvider({ children }) {
     setInputURL(e.currentTarget.value);
   };
 
-  const handleVideoAdd = (e) => {
+  const handleVideoAdd = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const source = checkVideoSource(inputURL);

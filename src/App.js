@@ -3,7 +3,7 @@ import Card from "react-bootstrap/Card";
 import { CardGroup } from "react-bootstrap";
 import { Row } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import { Context } from "./Context";
+import { Context } from "./Context.tsx";
 import { useContext } from "react";
 import Form from "react-bootstrap/Form";
 import { Modal } from "react-bootstrap";
