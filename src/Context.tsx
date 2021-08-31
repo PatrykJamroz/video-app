@@ -132,7 +132,7 @@ const ContextProvider: React.FC = ({ children }) => {
   };
 
   const fetchYouTubeData = async (videoID: string | null) => {
-    const data = await youtubeApi((videoID = ""));
+    const data = await youtubeApi(videoID);
     if (data.items.length === 0) {
       handleWrongUrlModalShow();
     } else {
@@ -175,7 +175,7 @@ const ContextProvider: React.FC = ({ children }) => {
   };
 
   const fetchVimeoData = async (videoID: string | null) => {
-    const data = await vimeoApi((videoID = ""));
+    const data = await vimeoApi(videoID);
 
     if (data.hasOwnProperty("error")) {
       handleWrongUrlModalShow();
