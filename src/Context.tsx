@@ -6,13 +6,12 @@ import type { FormEvent } from "react";
 
 interface ContextInterface {
   inputURL?: string;
-  videoData?: any;
+  videoData?: any /*VideoItemInterface[]*/;
   handleInputURLChange?: any;
   handleVideoAdd?: any;
   deleteVideo?: any;
   toggleFavourite?: any;
   handleFilterChange?: any;
-  videoSources?: any;
   sortDataBy?: any;
   deleteAllData?: () => void;
   exportToJsonFile?: () => void;
@@ -44,19 +43,26 @@ interface VideoItemInterface {
   url: string;
 }
 
+type SortBy = "savedDate" | "likeCount" | "favourite";
+
+type videoSources = "youtube" | "vimeo" | undefined;
+
+type FilterType = "YouTube" | "Vimeo" | "";
+
 const Context = React.createContext<ContextInterface>({});
 
 const ContextProvider: React.FC = ({ children }) => {
   const [inputURL, setInputURL] = useState("");
-  const [videoData, setVideoData] = useState(() => {
-    const videoData = localStorage.getItem("videoData");
-    if (videoData) {
-      return JSON.parse(videoData);
+  const [videoData, setVideoData] = useState(
+    /*<VideoItemInterface[]>*/ () => {
+      const videoData = localStorage.getItem("videoData");
+      if (videoData) {
+        return JSON.parse(videoData);
+      }
+      return [];
     }
-    return [];
-  });
-  const [filterType, setFilterType] = useState("");
-  const [videoSources, setVideoSources] = useState([""]);
+  );
+  const [filterType, setFilterType] = useState<FilterType>("");
   const [wasSortedBy, setWasSortedBy] = useState(false);
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [modalData, setModalData] = useState<ModalDataInterface>({});
@@ -104,7 +110,7 @@ const ContextProvider: React.FC = ({ children }) => {
     }
   };
 
-  const checkVideoSource = (inputURL: string) => {
+  const checkVideoSource = (inputURL: string): videoSources => {
     if (inputURL.includes("youtu") || inputURL.length === 11) {
       return "youtube";
     } else if (inputURL.includes("vimeo") || inputURL.length === 9) {
@@ -232,14 +238,14 @@ const ContextProvider: React.FC = ({ children }) => {
     setVideoData(newArray);
   };
 
-  const handleFilterChange = (type: string) => {
+  const handleFilterChange = (type: FilterType) => {
     setFilterType(type);
   };
 
   const sourceFiltering = useMemo(() => {
     return filterType
       ? videoData.filter(
-          (item: VideoItemInterface) => item.source === filterType
+          (item: any /*: VideoItemInterface*/) => item.source === filterType
         )
       : videoData;
   }, [videoData, filterType]);
@@ -292,7 +298,6 @@ const ContextProvider: React.FC = ({ children }) => {
         deleteVideo,
         toggleFavourite,
         handleFilterChange,
-        videoSources,
         sortDataBy,
         deleteAllData,
         exportToJsonFile,
@@ -311,14 +316,3 @@ const ContextProvider: React.FC = ({ children }) => {
   );
 };
 export { ContextProvider, Context };
-
-//hardcoded state
-// {
-//   id: "7lCDEYXw3mM",
-//   key: "7lCDEYXw3mM9",
-//   name: "Google I/O 101: Q&A On Using Google APIs",
-//   thumbnail: "https://i.ytimg.com/vi/7lCDEYXw3mM/default.jpg",
-//   savedDate:
-//     "Tue Feb 04 1992 21:49:21 GMT+0200 (Central European Summer Time)",
-//   source: "YouTube/Hardcoded",
-// },

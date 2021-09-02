@@ -14,7 +14,6 @@ function App() {
     deleteVideo,
     toggleFavourite,
     handleFilterChange,
-    videoSources,
     sortDataBy,
     deleteAllData,
     exportToJsonFile,
@@ -30,9 +29,6 @@ function App() {
   return (
     <div className="App">
       <Header />
-      {videoSources.map((item: any) => (
-        <p>{item}</p>
-      ))}
       <Button onClick={(e) => handleFilterChange("YouTube")}>Youtube</Button>
       <Button onClick={(e) => handleFilterChange("Vimeo")}>Vimeo</Button>
       <Button onClick={(e) => handleFilterChange("")}>All</Button>
