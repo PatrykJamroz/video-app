@@ -29,6 +29,7 @@ interface ContextInterface {
 interface ModalDataInterface {
   src?: string;
   name?: string;
+  source?: string;
 }
 
 interface VideoItemInterface {
@@ -63,15 +64,17 @@ const ContextProvider: React.FC = ({ children }) => {
   const [showWrongUrlModal, setShowWrongUrlModal] = useState(false);
 
   const createModalSrc = (videoItem: VideoItemInterface) => {
-    if (checkVideoSource(videoItem.id) === "youtube") {
+    if (videoItem.source === "youtube") {
       setModalData({
         src: `http://www.youtube.com/embed/${videoItem.id}`,
         name: videoItem.name,
+        source: videoItem.source,
       });
     } else {
       setModalData({
         src: `https://player.vimeo.com/video/${videoItem.id}`,
         name: videoItem.name,
+        source: videoItem.source,
       });
     }
   };
