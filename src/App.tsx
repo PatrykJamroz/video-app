@@ -1,9 +1,9 @@
-import Header from "./components/Header.tsx";
+import Header from "./components/Header";
 import Card from "react-bootstrap/Card";
 import { CardGroup } from "react-bootstrap";
 import { Row } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import { Context } from "./Context.tsx";
+import { Context } from "./Context";
 import { useContext } from "react";
 import Form from "react-bootstrap/Form";
 import { Modal } from "react-bootstrap";
@@ -30,7 +30,7 @@ function App() {
   return (
     <div className="App">
       <Header />
-      {videoSources.map((item) => (
+      {videoSources.map((item: any) => (
         <p>{item}</p>
       ))}
       <Button onClick={(e) => handleFilterChange("YouTube")}>Youtube</Button>
@@ -45,10 +45,10 @@ function App() {
       <Button variant="success" onClick={(e) => sortDataBy("favourite")}>
         Favourites
       </Button>
-      <Button variant="danger" onClick={(e) => deleteAllData()}>
+      <Button variant="danger" onClick={(e) => deleteAllData}>
         Remove all items
       </Button>
-      <Button variant="danger" onClick={(e) => exportToJsonFile()}>
+      <Button variant="danger" onClick={(e) => exportToJsonFile}>
         Export data
       </Button>
       <Modal
@@ -60,13 +60,13 @@ function App() {
         align="center"
       >
         <Modal.Header closeButton>
-          <Modal.Title>{modalData.name}</Modal.Title>
+          <Modal.Title>{modalData?.name}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <iframe
             id="inlineFrameExample"
             title="Inline Frame Example"
-            src={modalData.src}
+            src={modalData?.src}
             width="640"
             height="360"
           ></iframe>
@@ -109,7 +109,7 @@ function App() {
           {videoData.length === 0 ? (
             <p>Nothing to show here. Let's add video!</p>
           ) : (
-            videoData.map((item) => (
+            videoData.map((item: any) => (
               <Card
                 style={{ minWidth: "18rem", maxWidth: "300px " }}
                 key={item.key}
@@ -117,7 +117,7 @@ function App() {
                 <Card.Img
                   variant="top"
                   src={item.thumbnail}
-                  onClick={(e) => handleVideoModalShow(item)}
+                  onClick={(e: any) => handleVideoModalShow(item)}
                 />
                 <Card.Body>
                   <Card.Title>{item.name}</Card.Title>

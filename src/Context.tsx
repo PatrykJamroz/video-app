@@ -59,7 +59,7 @@ const ContextProvider: React.FC = ({ children }) => {
   const [videoSources, setVideoSources] = useState([""]);
   const [wasSortedBy, setWasSortedBy] = useState(false);
   const [showVideoModal, setShowVideoModal] = useState(false);
-  const [modalData, setModalData] = useState({});
+  const [modalData, setModalData] = useState<ModalDataInterface>({});
   const [showWrongUrlModal, setShowWrongUrlModal] = useState(false);
 
   const createModalSrc = (videoItem: VideoItemInterface) => {
