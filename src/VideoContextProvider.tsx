@@ -1,36 +1,35 @@
-import { ReactNode, ReactText, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import type { FormEvent } from "react";
 import { youtubeApi } from "./APIs/youtubeAPI";
 import { vimeoApi } from "./APIs/vimeoAPI";
-import React from "react";
-import type { FormEvent } from "react";
 
-interface ContextInterface {
-  inputURL?: string;
-  videoData?: any /*VideoItemInterface[]*/;
-  handleInputURLChange?: any;
-  handleVideoAdd?: any;
-  deleteVideo?: any;
-  toggleFavourite?: any;
-  handleFilterChange?: any;
-  sortDataBy?: any;
-  deleteAllData?: () => void;
-  exportToJsonFile?: () => void;
-  handleJsonImport?: any;
-  handleVideoModalClose?: () => void;
-  handleVideoModalShow?: any;
-  showVideoModal?: any;
-  modalData?: ModalDataInterface;
-  showWrongUrlModal?: boolean;
-  handleWrongUrlModalShow?: () => void;
-  handleWrongUrlModalClose?: () => void;
+interface VideoContext {
+  inputURL: string;
+  videoData: VideoItem[];
+  handleInputURLChange: () => void;
+  handleVideoAdd: (e: FormEvent<HTMLFormElement>) => void;
+  deleteVideo: (key: string) => void;
+  toggleFavourite: (key: string) => void;
+  handleFilterChange: (type: FilterType) => void;
+  sortDataBy: (sortBy: SortBy) => void;
+  deleteAllData: () => void;
+  exportToJsonFile: () => void;
+  handleJsonImport: () => void;
+  handleVideoModalClose: () => void;
+  handleVideoModalShow: (videoItem: VideoItem) => void;
+  showVideoModal: () => void;
+  modalData: ModalData | null;
+  showWrongUrlModal: boolean;
+  handleWrongUrlModalShow: () => void;
+  handleWrongUrlModalClose: () => void;
 }
 
-interface ModalDataInterface {
-  src?: string;
-  name?: string;
+interface ModalData {
+  src: string;
+  name: string;
 }
 
-interface VideoItemInterface {
+interface VideoItem {
   id: string;
   key: string;
   name: string;
@@ -45,30 +44,32 @@ interface VideoItemInterface {
 
 type SortBy = "savedDate" | "likeCount" | "favourite";
 
-type videoSources = "youtube" | "vimeo" | undefined;
+type VideoSources = "youtube" | "vimeo" | undefined;
 
 type FilterType = "YouTube" | "Vimeo" | "";
 
-const Context = React.createContext<ContextInterface>({});
+export const VideoAppContext = React.createContext<VideoContext | null>(null);
 
-const ContextProvider: React.FC = ({ children }) => {
+export function VideoContextProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [inputURL, setInputURL] = useState("");
-  const [videoData, setVideoData] = useState(
-    /*<VideoItemInterface[]>*/ () => {
-      const videoData = localStorage.getItem("videoData");
-      if (videoData) {
-        return JSON.parse(videoData);
-      }
-      return [];
+  const [videoData, setVideoData] = useState<VideoItem[]>(() => {
+    const videoLocalData = localStorage.getItem("videoData");
+    if (videoLocalData) {
+      return JSON.parse(videoLocalData);
     }
-  );
+    return [];
+  });
   const [filterType, setFilterType] = useState<FilterType>("");
   const [wasSortedBy, setWasSortedBy] = useState(false);
   const [showVideoModal, setShowVideoModal] = useState(false);
-  const [modalData, setModalData] = useState<ModalDataInterface>({});
+  const [modalData, setModalData] = useState<ModalData | null>(null);
   const [showWrongUrlModal, setShowWrongUrlModal] = useState(false);
 
-  const createModalSrc = (videoItem: VideoItemInterface) => {
+  const createModalSrc = (videoItem: VideoItem) => {
     if (videoItem.source === "YouTube") {
       setModalData({
         src: `http://www.youtube.com/embed/${videoItem.id}`,
@@ -82,7 +83,7 @@ const ContextProvider: React.FC = ({ children }) => {
     }
   };
 
-  const handleVideoModalShow = (videoItem: VideoItemInterface) => {
+  const handleVideoModalShow = (videoItem: VideoItem) => {
     createModalSrc(videoItem);
     setShowVideoModal(true);
   };
@@ -96,59 +97,25 @@ const ContextProvider: React.FC = ({ children }) => {
     setInputURL(e.currentTarget.value);
   };
 
-  const handleVideoAdd = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const source = checkVideoSource(inputURL);
-
-    if (source === "youtube") {
-      handleYouTubeVideo(inputURL);
-    } else if (source === "vimeo") {
-      handleVimeoVideo(inputURL);
-    } else {
-      handleWrongUrlModalShow();
-    }
-  };
-
-  const checkVideoSource = (inputURL: string): videoSources => {
+  const checkVideoSource = (): VideoSources => {
     if (inputURL.includes("youtu") || inputURL.length === 11) {
       return "youtube";
-    } else if (inputURL.includes("vimeo") || inputURL.length === 9) {
-      return "vimeo";
     }
+    return "vimeo";
   };
 
-  const checkURL = (inputURL: string) => {
-    if (!inputURL.includes("http")) {
-      const properURL = `https://${inputURL}`;
-      return properURL;
-    } else {
-      return inputURL;
-    }
-  };
-
-  const checkInputType = (inputURL: string) => {
-    if (!inputURL.includes("http") && inputURL.length === 11) {
-      return "id";
-    } else if (!inputURL.includes("http") && inputURL.length === 9) {
-      return "id";
-    } else {
-      return "url";
-    }
-  };
-
-  const fetchYouTubeData = async (videoID: string | null) => {
+  const fetchYouTubeData = async (videoID: string) => {
     const data = await youtubeApi(videoID);
     if (data.items.length === 0) {
       handleWrongUrlModalShow();
     } else {
-      setVideoData((state: any) => [
-        ...state,
+      setVideoData((prevState) => [
+        ...prevState,
         {
           id: videoID,
           key: `${videoID}${Math.random()}`,
           name: data.items[0].snippet.title,
-          thumbnail: data.items[0].snippet.thumbnails.medium.url, //default, medium, high
+          thumbnail: data.items[0].snippet.thumbnails.medium.url, // default, medium, high
           viewCount: data.items[0].statistics.viewCount,
           likeCount: data.items[0].statistics.likeCount,
           savedDate: new Date(),
@@ -161,18 +128,40 @@ const ContextProvider: React.FC = ({ children }) => {
     }
   };
 
-  const handleYouTubeVideo = (inputURL: string) => {
-    const inputType = checkInputType(inputURL);
+  const checkInputType = () => {
+    if (!inputURL.includes("http") && inputURL.length === 11) {
+      return "id";
+    }
+    if (!inputURL.includes("http") && inputURL.length === 9) {
+      return "id";
+    }
+    return "url";
+  };
+
+  const checkURL = () => {
+    if (!inputURL.includes("http")) {
+      const properURL = `https://${inputURL}`;
+      return properURL;
+    }
+    return inputURL;
+  };
+
+  const handleYouTubeVideo = () => {
+    const inputType = checkInputType();
 
     if (inputType === "id") {
       fetchYouTubeData(inputURL);
     } else {
-      const checkedURL = checkURL(inputURL);
+      const checkedURL = checkURL();
       const url = new URL(checkedURL);
       if (inputURL.includes("youtube.com")) {
         const params = url.searchParams;
         const videoID = params.get("v");
-        fetchYouTubeData(videoID);
+        if (videoID) {
+          fetchYouTubeData(videoID);
+        } else {
+          throw new Error("Could not find video id");
+        }
       } else {
         const videoID = url.pathname.split("/");
         fetchYouTubeData(videoID[1]);
@@ -180,9 +169,9 @@ const ContextProvider: React.FC = ({ children }) => {
     }
   };
 
-  const fetchVimeoData = async (videoID: string | null) => {
+  const fetchVimeoData = async (videoID: string) => {
     const data = await vimeoApi(videoID);
-
+    // refactor error handling
     if (data.hasOwnProperty("error")) {
       handleWrongUrlModalShow();
     } else {
@@ -192,7 +181,7 @@ const ContextProvider: React.FC = ({ children }) => {
           id: videoID,
           key: `${videoID}${Math.random()}`,
           name: data.name,
-          thumbnail: data.pictures.sizes[2].link, //0-8
+          thumbnail: data.pictures.sizes[2].link, // 0-8
           savedDate: new Date(),
           viewCount: data.stats.plays,
           likeCount: data.metadata.connections.likes.total,
@@ -205,21 +194,35 @@ const ContextProvider: React.FC = ({ children }) => {
     }
   };
 
-  const handleVimeoVideo = (inputURL: string) => {
-    const inputType = checkInputType(inputURL);
+  const handleVimeoVideo = () => {
+    const inputType = checkInputType();
 
     if (inputType === "id") {
       fetchVimeoData(inputURL);
     } else {
-      const checkedURL = checkURL(inputURL);
+      const checkedURL = checkURL();
       const url = new URL(checkedURL);
       const videoID = url.pathname.split("/");
       fetchVimeoData(videoID[1]);
     }
   };
 
+  const handleVideoAdd = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const source = checkVideoSource();
+
+    if (source === "youtube") {
+      handleYouTubeVideo();
+    } else if (source === "vimeo") {
+      handleVimeoVideo();
+    } else {
+      handleWrongUrlModalShow();
+    }
+  };
+
   const deleteVideo = (key: string) => {
-    let newArray = [...videoData].filter((video) => video.key !== key);
+    const newArray = [...videoData].filter((video) => video.key !== key);
     setWasSortedBy(true);
     setVideoData(newArray);
   };
@@ -229,11 +232,11 @@ const ContextProvider: React.FC = ({ children }) => {
   };
 
   const toggleFavourite = (key: string) => {
-    let newArray = [...videoData];
-    newArray.map((item) => {
+    const newArray = [...videoData].map((item) => {
       if (item.key === key) {
-        item.favourite = !item.favourite;
+        return { ...item, favourite: !item.favourite };
       }
+      return item;
     });
     setVideoData(newArray);
   };
@@ -244,13 +247,11 @@ const ContextProvider: React.FC = ({ children }) => {
 
   const sourceFiltering = useMemo(() => {
     return filterType
-      ? videoData.filter(
-          (item: any /*: VideoItemInterface*/) => item.source === filterType
-        )
+      ? videoData.filter((item) => item.source === filterType)
       : videoData;
   }, [videoData, filterType]);
 
-  const sortDataBy = (sortBy: string) => {
+  const sortDataBy = (sortBy: SortBy) => {
     if (wasSortedBy) {
       const reversedArr = [...videoData].reverse();
       setVideoData(reversedArr);
@@ -262,24 +263,25 @@ const ContextProvider: React.FC = ({ children }) => {
   };
 
   const exportToJsonFile = () => {
-    let dataStr = JSON.stringify(videoData);
-    let dataUri =
-      "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
+    const dataStr = JSON.stringify(videoData);
+    const dataUri = `data:application/json;charset=utf-8,${encodeURIComponent(
+      dataStr
+    )}`;
 
-    let exportFileDefaultName = "videoData.json";
+    const exportFileDefaultName = "videoData.json";
 
-    let linkElement = document.createElement("a");
+    const linkElement = document.createElement("a");
     linkElement.setAttribute("href", dataUri);
     linkElement.setAttribute("download", exportFileDefaultName);
     linkElement.click();
   };
 
-  const handleJsonImport = (e: any) => {
+  const handleJsonImport = (e) => {
     e.preventDefault();
     const fileReader = new FileReader();
     fileReader.readAsText(e.target.files[0], "UTF-8");
-    fileReader.onload = (e: any) => {
-      const convertedData = JSON.parse(e.target.result);
+    fileReader.onload = () => {
+      const convertedData: VideoItem[] = JSON.parse(e.target?.result as string);
       setVideoData([...convertedData]);
     };
   };
@@ -289,7 +291,7 @@ const ContextProvider: React.FC = ({ children }) => {
   }, [videoData]);
 
   return (
-    <Context.Provider
+    <VideoAppContext.Provider
       value={{
         inputURL,
         videoData: sourceFiltering,
@@ -312,7 +314,16 @@ const ContextProvider: React.FC = ({ children }) => {
       }}
     >
       {children}
-    </Context.Provider>
+    </VideoAppContext.Provider>
   );
-};
-export { ContextProvider, Context };
+}
+
+export function useVideoContext() {
+  const context = React.useContext(VideoAppContext);
+  if (context === null) {
+    throw new Error(
+      "useVideoContext must be used within a VideoContextProvider"
+    );
+  }
+  return context;
+}

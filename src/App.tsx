@@ -1,12 +1,9 @@
-import Header from "./components/Header";
 import Card from "react-bootstrap/Card";
-import { CardGroup } from "react-bootstrap";
-import { Row } from "react-bootstrap";
+import { CardGroup, Row, Modal } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import { Context } from "./Context";
-import { useContext } from "react";
 import Form from "react-bootstrap/Form";
-import { Modal } from "react-bootstrap";
+import Header from "./components/Header";
+import { useVideoContext } from "./VideoContextProvider";
 
 function App() {
   const {
@@ -24,34 +21,34 @@ function App() {
     modalData,
     showWrongUrlModal,
     handleWrongUrlModalClose,
-  } = useContext(Context);
+  } = useVideoContext();
 
   return (
     <div className="App">
       <Header />
-      <Button onClick={(e) => handleFilterChange("YouTube")}>Youtube</Button>
-      <Button onClick={(e) => handleFilterChange("Vimeo")}>Vimeo</Button>
-      <Button onClick={(e) => handleFilterChange("")}>All</Button>
-      <Button variant="success" onClick={(e) => sortDataBy("savedDate")}>
+      <Button onClick={() => handleFilterChange("YouTube")}>Youtube</Button>
+      <Button onClick={() => handleFilterChange("Vimeo")}>Vimeo</Button>
+      <Button onClick={() => handleFilterChange("")}>All</Button>
+      <Button variant="success" onClick={() => sortDataBy("savedDate")}>
         By date
       </Button>
-      <Button variant="success" onClick={(e) => sortDataBy("likeCount")}>
+      <Button variant="success" onClick={() => sortDataBy("likeCount")}>
         By likes
       </Button>
-      <Button variant="success" onClick={(e) => sortDataBy("favourite")}>
+      <Button variant="success" onClick={() => sortDataBy("favourite")}>
         Favourites
       </Button>
-      <Button variant="danger" onClick={(e) => deleteAllData}>
+      <Button variant="danger" onClick={() => deleteAllData}>
         Remove all items
       </Button>
-      <Button variant="danger" onClick={(e) => exportToJsonFile}>
+      <Button variant="danger" onClick={() => exportToJsonFile}>
         Export data
       </Button>
       <Modal
         show={showVideoModal}
         onHide={handleVideoModalClose}
         backdrop="static"
-        keyboard={true}
+        keyboard
         size="lg"
         align="center"
       >
@@ -65,7 +62,7 @@ function App() {
             src={modalData?.src}
             width="640"
             height="360"
-          ></iframe>
+          />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleVideoModalClose}>
@@ -77,7 +74,7 @@ function App() {
         show={showWrongUrlModal}
         onHide={handleWrongUrlModalClose}
         backdrop="static"
-        keyboard={true}
+        keyboard
         size="sm"
         align="center"
       >
@@ -103,9 +100,9 @@ function App() {
       <CardGroup>
         <Row xs={1} md={3} className="g-4">
           {videoData.length === 0 ? (
-            <p>Nothing to show here. Let's add video!</p>
+            <p>Nothing to show here. Let`s add video!</p>
           ) : (
-            videoData.map((item: any) => (
+            videoData.map((item) => (
               <Card
                 style={{ minWidth: "18rem", maxWidth: "300px " }}
                 key={item.key}
@@ -113,7 +110,7 @@ function App() {
                 <Card.Img
                   variant="top"
                   src={item.thumbnail}
-                  onClick={(e: any) => handleVideoModalShow(item)}
+                  onClick={() => handleVideoModalShow(item)}
                 />
                 <Card.Body>
                   <Card.Title>{item.name}</Card.Title>
@@ -124,19 +121,19 @@ function App() {
                   <Card.Text>{`favourite: ${item.favourite}`}</Card.Text>
                   <Button
                     variant="danger"
-                    onClick={(e) => deleteVideo(item.key, e)}
+                    onClick={() => deleteVideo(item.key)}
                   >
                     Delete
                   </Button>
                   <Button
                     variant="primary"
-                    onClick={(e) => window.open(item.url, "_blank")}
+                    onClick={() => window.open(item.url, "_blank")}
                   >
                     Watch on {item.source}
                   </Button>
                   <Button
                     variant="success"
-                    onClick={(e) => toggleFavourite(item.key, e)}
+                    onClick={() => toggleFavourite(item.key)}
                   >
                     {item.favourite
                       ? "Remove from favourites"

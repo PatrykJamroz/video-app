@@ -1,4 +1,4 @@
-import { Context } from "../Context";
+import { Context } from "../VideoContextProvider";
 import React, { useContext } from "react";
 import { Navbar, Button, Form, FormControl } from "react-bootstrap";
 
