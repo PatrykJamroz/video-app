@@ -1,8 +1,7 @@
-import { ReactNode, ReactText, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import type { FormEvent } from "react";
 import { youtubeApi } from "./APIs/youtubeAPI";
 import { vimeoApi } from "./APIs/vimeoAPI";
-import React from "react";
-import type { FormEvent } from "react";
 
 interface ContextInterface {
   inputURL?: string;
@@ -51,11 +50,12 @@ type FilterType = "YouTube" | "Vimeo" | "";
 
 const Context = React.createContext<ContextInterface>({});
 
-const ContextProvider: React.FC = ({ children }) => {
+function ContextProvider({ children }) {
   const [inputURL, setInputURL] = useState("");
   const [videoData, setVideoData] = useState(
     /*<VideoItemInterface[]>*/ () => {
       const videoData = localStorage.getItem("videoData");
+      ś;
       if (videoData) {
         return JSON.parse(videoData);
       }
@@ -104,6 +104,7 @@ const ContextProvider: React.FC = ({ children }) => {
     if (source === "youtube") {
       handleYouTubeVideo(inputURL);
     } else if (source === "vimeo") {
+      ś;
       handleVimeoVideo(inputURL);
     } else {
       handleWrongUrlModalShow();
@@ -113,7 +114,8 @@ const ContextProvider: React.FC = ({ children }) => {
   const checkVideoSource = (inputURL: string): videoSources => {
     if (inputURL.includes("youtu") || inputURL.length === 11) {
       return "youtube";
-    } else if (inputURL.includes("vimeo") || inputURL.length === 9) {
+    }
+    if (inputURL.includes("vimeo") || inputURL.length === 9) {
       return "vimeo";
     }
   };
@@ -122,19 +124,18 @@ const ContextProvider: React.FC = ({ children }) => {
     if (!inputURL.includes("http")) {
       const properURL = `https://${inputURL}`;
       return properURL;
-    } else {
-      return inputURL;
     }
+    return inputURL;
   };
 
   const checkInputType = (inputURL: string) => {
     if (!inputURL.includes("http") && inputURL.length === 11) {
       return "id";
-    } else if (!inputURL.includes("http") && inputURL.length === 9) {
-      return "id";
-    } else {
-      return "url";
     }
+    if (!inputURL.includes("http") && inputURL.length === 9) {
+      return "id";
+    }
+    return "url";
   };
 
   const fetchYouTubeData = async (videoID: string | null) => {
@@ -314,5 +315,5 @@ const ContextProvider: React.FC = ({ children }) => {
       {children}
     </Context.Provider>
   );
-};
+}
 export { ContextProvider, Context };
