@@ -1,10 +1,8 @@
-import { Context } from "../VideoContextProvider";
-import React, { useContext } from "react";
 import { Navbar, Button, Form, FormControl } from "react-bootstrap";
+import { useVideoContext } from "../VideoContextProvider";
 
 export default function Header() {
-  const { handleVideoAdd, inputURL, handleInputURLChange } =
-    useContext(Context);
+  const { handleVideoAdd, inputURL, handleInputURLChange } = useVideoContext();
   return (
     <Navbar bg="light" expand="lg">
       <Navbar.Brand href="#home">Video App</Navbar.Brand>
