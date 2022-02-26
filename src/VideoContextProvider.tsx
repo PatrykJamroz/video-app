@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
-import { youtubeApi } from "./APIs/youtubeAPI";
-import { vimeoApi } from "./APIs/vimeoAPI";
+import youtubeApi from "./APIs/youtubeAPI";
+import vimeoApi from "./APIs/vimeoAPI";
 
 interface VideoContext {
   inputURL: string;
