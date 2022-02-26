@@ -17,7 +17,7 @@ interface VideoContext {
   handleJsonImport: () => void;
   handleVideoModalClose: () => void;
   handleVideoModalShow: (videoItem: VideoItem) => void;
-  showVideoModal: () => void;
+  showVideoModal: boolean;
   modalData: ModalData | null;
   showWrongUrlModal: boolean;
   handleWrongUrlModalShow: () => void;
@@ -281,7 +281,7 @@ export function VideoContextProvider({
     const fileReader = new FileReader();
     fileReader.readAsText(e.target.files[0], "UTF-8");
     fileReader.onload = () => {
-      const convertedData: VideoItem[] = JSON.parse(e.target?.result as string);
+      const convertedData: VideoItem[] = JSON.parse(e.target?.result);s
       setVideoData([...convertedData]);
     };
   };
