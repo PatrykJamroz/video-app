@@ -1,3 +1,54 @@
+# Video Collection App
+
+App allows user to store YouTube and Vimeo videos. 
+
+### Features
+* Add YouTube or Vimeo video via URL or ID
+* Local storage
+* Import / Export data in JSON
+* Delete specific video or all at once
+* Add video to favourites
+* Watch video in modal view or on source page
+* Sort video by source (YouTube, Vimeo) or by data, likes or favourites (eg. favs first)
+
+### Technologies
+* React
+* Typescript
+* Eslint (airbnb typescript)
+* Bootstrap
+
+### Future development
+App has been written in js befeore I got first job as frontend dev. After that I re-wrote it to typesciprt, added eslint and did refactor work.
+Currenly I'm focused on my frontend job so I have little time to be active here on github. 
+In the future I will try to implement following:
+* Errors handling
+* Loading states
+* Tests
+* Improve UI
+
+### How to run the app
+Besides pulling the repository and installing packages you will have to add your own crede.ts file in src dir which contains [YouTube Data API v3 key](https://developers.google.com/youtube/v3/getting-started) and [Vimeo API token](https://developer.vimeo.com/api/guides/start). This is required to be able to fetch data. I'm not providing my keys, you'll need to generate your own.
+
+```
+// src/crede.ts
+interface ApiKey {
+  youtube: string;
+  vimeo: string;
+}
+
+// eslint-disable-next-line import/prefer-default-export
+export const API_KEY: ApiKey = {
+  youtube: "YourYouTubeApiKey",
+  vimeo: "YourVimeoApiKey",
+};
+```
+
+### Screenshots
+![App main page with grid](https://user-images.githubusercontent.com/34837954/155882045-789d329d-7842-46d4-8529-893a3f34b45c.png)
+
+![Video Modal](https://user-images.githubusercontent.com/34837954/155882068-df77fff6-bdff-4721-8712-54215feb9faf.png)
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
@@ -47,24 +98,3 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 ### Code Splitting
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
