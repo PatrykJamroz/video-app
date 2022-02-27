@@ -6,7 +6,7 @@ import vimeoApi from "./APIs/vimeoAPI";
 interface VideoContext {
   inputURL: string;
   videoData: VideoItem[];
-  handleInputURLChange: () => void;
+  handleInputURLChange: (e: React.FormEvent<HTMLInputElement>) => void;
   handleVideoAdd: (e: FormEvent<HTMLFormElement>) => void;
   deleteVideo: (key: string) => void;
   toggleFavourite: (key: string) => void;
@@ -14,7 +14,7 @@ interface VideoContext {
   sortDataBy: (sortBy: SortBy) => void;
   deleteAllData: () => void;
   exportToJsonFile: () => void;
-  handleJsonImport: () => void;
+  handleJsonImport: (e: HTMLInputEvent) => void;
   handleVideoModalClose: () => void;
   handleVideoModalShow: (videoItem: VideoItem) => void;
   showVideoModal: boolean;
@@ -40,6 +40,10 @@ interface VideoItem {
   favourite: boolean;
   source: string;
   url: string;
+}
+
+export interface HTMLInputEvent extends Event {
+  target: HTMLInputElement & EventTarget;
 }
 
 type SortBy = "savedDate" | "likeCount" | "favourite";
@@ -93,7 +97,7 @@ export function VideoContextProvider({
 
   const handleWrongUrlModalClose = () => setShowWrongUrlModal(false);
 
-  const handleInputURLChange = (e: FormEvent<HTMLFormElement>) => {
+  const handleInputURLChange = (e: React.FormEvent<HTMLInputElement>) => {
     setInputURL(e.currentTarget.value);
   };
 
@@ -172,10 +176,10 @@ export function VideoContextProvider({
   const fetchVimeoData = async (videoID: string) => {
     const data = await vimeoApi(videoID);
     // refactor error handling
-    if (data.hasOwnProperty("error")) {
+    if (Object.prototype.hasOwnProperty.call(data, "error")) {
       handleWrongUrlModalShow();
     } else {
-      setVideoData((state: any) => [
+      setVideoData((state) => [
         ...state,
         {
           id: videoID,
@@ -276,12 +280,16 @@ export function VideoContextProvider({
     linkElement.click();
   };
 
-  const handleJsonImport = (e) => {
+  const handleJsonImport = (e: HTMLInputEvent) => {
     e.preventDefault();
+    if (!e.target.files) return;
     const fileReader = new FileReader();
     fileReader.readAsText(e.target.files[0], "UTF-8");
-    fileReader.onload = () => {
-      const convertedData: VideoItem[] = JSON.parse(e.target?.result);s
+    fileReader.onload = (event) => {
+      if (!event.target?.result) return;
+      const convertedData: VideoItem[] = JSON.parse(
+        event.target?.result.toString()
+      );
       setVideoData([...convertedData]);
     };
   };
@@ -292,6 +300,7 @@ export function VideoContextProvider({
 
   return (
     <VideoAppContext.Provider
+      // eslint-disable-next-line react/jsx-no-constructed-context-values
       value={{
         inputURL,
         videoData: sourceFiltering,

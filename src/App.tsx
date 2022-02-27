@@ -38,10 +38,10 @@ function App() {
       <Button variant="success" onClick={() => sortDataBy("favourite")}>
         Favourites
       </Button>
-      <Button variant="danger" onClick={() => deleteAllData}>
+      <Button variant="danger" onClick={deleteAllData}>
         Remove all items
       </Button>
-      <Button variant="danger" onClick={() => exportToJsonFile}>
+      <Button variant="danger" onClick={exportToJsonFile}>
         Export data
       </Button>
       <Modal

@@ -12,7 +12,9 @@ export default function Header() {
           name="url"
           placeholder="Paste url"
           value={inputURL}
-          onChange={handleInputURLChange}
+          onChange={(e) =>
+            handleInputURLChange(e as React.FormEvent<HTMLInputElement>)
+          }
           className="mr-sm-2"
         />
         <Button type="submit" variant="outline-success">
