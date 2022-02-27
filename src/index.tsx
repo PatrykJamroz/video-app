@@ -4,13 +4,13 @@ import "./index.css";
 import App from "./App";
 import "bootstrap/dist/css/bootstrap.min.css";
 import reportWebVitals from "./reportWebVitals";
-import { ContextProvider } from "./Context";
+import { VideoContextProvider } from "./VideoContextProvider";
 
 ReactDOM.render(
   <React.StrictMode>
-    <ContextProvider>
+    <VideoContextProvider>
       <App />
-    </ContextProvider>
+    </VideoContextProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

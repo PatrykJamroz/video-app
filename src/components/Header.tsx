@@ -1,14 +1,8 @@
-import Navbar from "react-bootstrap/Navbar";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import FormControl from "react-bootstrap/FormControl";
-import { Context } from "../Context";
-import { useContext } from "react";
+import { Navbar, Button, Form, FormControl } from "react-bootstrap";
+import { useVideoContext } from "../VideoContextProvider";
 
 export default function Header() {
-  const { handleVideoAdd, inputURL, handleInputURLChange } =
-    useContext(Context);
-  // console.log(`header: ${data.videoData}`);
+  const { handleVideoAdd, inputURL, handleInputURLChange } = useVideoContext();
   return (
     <Navbar bg="light" expand="lg">
       <Navbar.Brand href="#home">Video App</Navbar.Brand>
@@ -18,7 +12,9 @@ export default function Header() {
           name="url"
           placeholder="Paste url"
           value={inputURL}
-          onChange={handleInputURLChange}
+          onChange={(e) =>
+            handleInputURLChange(e as React.FormEvent<HTMLInputElement>)
+          }
           className="mr-sm-2"
         />
         <Button type="submit" variant="outline-success">
