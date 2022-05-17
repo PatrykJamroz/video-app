@@ -17,7 +17,7 @@ App allows user to store YouTube and Vimeo videos.
 * Eslint (airbnb typescript)
 * Bootstrap
 
-### Future development
+### TO-DOs
 App has been written in js before I got first job as frontend dev. After that I re-wrote it to typesciprt, added eslint and did refactor work.
 Currenly I'm focused on my frontend job so I have little time to be active here on github. 
 In the future I will try to implement following:
