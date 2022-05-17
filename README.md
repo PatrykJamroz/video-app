@@ -18,8 +18,8 @@ App allows user to store YouTube and Vimeo videos.
 * Bootstrap
 
 ### TO-DOs
-App has been written in js before I got first job as frontend dev. After that I re-wrote it to typesciprt, added eslint and did refactor work.
-Currenly I'm focused on my frontend job so I have little time to be active here on github. 
+App has been written in js before I got first job. After that I converted it to typescript, added eslint and did refactor work.
+Currenly I'm focused on my job so I have little time to be active here on github. 
 In the future I will try to implement following:
 * Errors handling
 * Loading states
